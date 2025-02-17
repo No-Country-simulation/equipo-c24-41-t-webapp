@@ -1,27 +1,13 @@
-<!-- header de la página -->
-<header class="bg-light border-bottom">
+<header class="bg-light border-bottom header-sticky" [class.hidden]="isHidden">
     <div class="container-fluid d-flex justify-content-between align-items-center py-2">
-        <!-- Sección del logo y el nombre de la página -->
+        <!-- Sección del logo y el nombre -->
         <div class="d-flex align-items-center">
-            <!-- Logo -->
             <i class="fa-solid fa-cart-shopping me-2"></i>
-            <!-- Nombre de la página -->
             <span class="h5 mb-0">TITULO</span>
         </div>
-
-        <!--  barra de búsqueda y botones -->
+        <!-- Barra de búsqueda y botones -->
         <div class="d-flex align-items-center">
-            <!-- Grupo de entrada para búsqueda -->
-            <div class="input-group me-3">
-                <input class="form-control" placeholder="Busca Cerámica" type="text" />
-                <!-- Icono de la lupa en la barra de búsqueda -->
-                <span class="input-group-text">
-                    <i class="fa-sharp-duotone fa-solid fa-magnifying-glass"></i>
-                </span>
-            </div>
-            <!-- Botón para registrarse o iniciar sesión -->
-            <button class="btn btn-outline-primary me-2">Regístrate o inicia sesión</button>
-            <!-- Botón de vender -->
+            <ng-content></ng-content>
             <button class="btn btn-primary">Vender</button>
         </div>
     </div>
