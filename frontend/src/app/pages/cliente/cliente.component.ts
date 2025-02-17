@@ -8,10 +8,11 @@ import { PerfilIconComponent } from '../../shared/components/perfil-icon/perfil-
 import { FavsIconComponent } from '../../shared/components/favs-icon/favs-icon.component';
 import { CartComponent } from '../../shared/components/cart/cart.component';
 import { FeaturedComponent } from '../../shared/components/featured/featured.component';
+import { SellButtonComponent } from '../../shared/components/sell-button/sell-button.component';
 
 @Component({
   selector: 'app-cliente',
-  imports: [CommonModule, HeaderComponent, CategoryComponent, SearchComponent, FooterComponent, PerfilIconComponent, FavsIconComponent, CartComponent, FeaturedComponent],
+  imports: [CommonModule, HeaderComponent, CategoryComponent, SearchComponent, FooterComponent, PerfilIconComponent, FavsIconComponent, CartComponent, FeaturedComponent, SellButtonComponent],
   templateUrl: './cliente.component.html',
   styleUrl: './cliente.component.css'
 })
