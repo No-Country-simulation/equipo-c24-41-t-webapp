@@ -21,7 +21,7 @@ export class SellButtonComponent implements OnInit {
     }
   }
 
-// Método que alterna entre las rutas 'vendedor' y 'cliente' dependiendo de la URL actual
+// Método que alterna entre las rutas 'vendedor' y 'cliente' dependiendo de la URL
 toggleRoute(): void {
   const currentUrl = this.router.url;
   if (currentUrl.includes('vendedor')) { // Si la URL contiene 'vendedor'
