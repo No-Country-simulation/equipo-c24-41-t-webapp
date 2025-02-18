@@ -1,0 +1,96 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow position-relative">
+          <!-- Botón para volver al Home -->
+          <button 
+            type="button" 
+            class="btn-close position-absolute top-0 end-0 m-2" 
+            aria-label="Close" 
+            (click)="goHome()">
+          </button>
+  
+          <div class="card-body">
+            <!-- Pestañas para cambiar entre Login y Registro -->
+            <ul class="nav nav-tabs mb-3">
+              <li class="nav-item">
+                <button 
+                  class="nav-link" 
+                  [class.active]="isLogin" 
+                  (click)="toggleMode(true)">
+                  Iniciar Sesión
+                </button>
+              </li>
+              <li class="nav-item">
+                <button 
+                  class="nav-link" 
+                  [class.active]="!isLogin" 
+                  (click)="toggleMode(false)">
+                  Registro
+                </button>
+              </li>
+            </ul>
+  
+            <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+              <!-- Campo Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input 
+                  id="email" 
+                  formControlName="email" 
+                  type="email" 
+                  class="form-control" 
+                  placeholder="tuemail@ejemplo.com" />
+              </div>
+  
+              <!-- Campo Contraseña -->
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input 
+                  id="password" 
+                  formControlName="password" 
+                  type="password" 
+                  class="form-control" 
+                  placeholder="Contraseña" />
+              </div>
+  
+              <!-- Campos adicionales para Registro -->
+              <ng-container *ngIf="!isLogin">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Nombre</label>
+                  <input 
+                    id="name" 
+                    formControlName="name" 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Tu nombre" />
+                </div>
+                <div class="mb-3">
+                  <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                  <input 
+                    id="confirmPassword" 
+                    formControlName="confirmPassword" 
+                    type="password" 
+                    class="form-control" 
+                    placeholder="Confirmar contraseña" />
+                </div>
+                <div class="mb-3">
+                  <label for="role" class="form-label">Rol</label>
+                  <select id="role" formControlName="role" class="form-select">
+                    <option value="cliente">Cliente</option>
+                    <option value="vendedor">Vendedor</option>
+                  </select>
+                </div>
+              </ng-container>
+  
+              <!-- Botón de envío -->
+              <button type="submit" class="btn btn-primary w-100">
+                {{ isLogin ? 'Iniciar Sesión' : 'Registrarse' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
