@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-login-register',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-register.component.html',
-  styleUrl: './login-register.component.css'
+  styleUrls: ['./login-register.component.css']
 })
 export class LoginRegisterComponent implements OnInit {
   authForm!: FormGroup;
@@ -42,7 +41,8 @@ export class LoginRegisterComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
         confirmPassword: ['', Validators.required],
-        role: ['cliente', Validators.required]
+        role: ['cliente', Validators.required],
+        businessName: [''] // Inicializa el campo businessName vacío
       }, { validator: this.passwordMatchValidator });
     }
   }
@@ -51,6 +51,16 @@ export class LoginRegisterComponent implements OnInit {
   passwordMatchValidator(form: FormGroup) {
     return form.get('password')!.value === form.get('confirmPassword')!.value
       ? null : { mismatch: true };
+  }
+
+  // Método que maneja el cambio de rol
+  onRoleChange(event: any): void {
+    const role = event.target.value;
+    if (role === 'vendedor') {
+      this.authForm.addControl('businessName', new FormControl('', Validators.required));
+    } else {
+      this.authForm.removeControl('businessName');
+    }
   }
 
   onSubmit(): void {
@@ -70,7 +80,7 @@ export class LoginRegisterComponent implements OnInit {
     }
   }
   
-  // Método para volver a la página de inici
+  // Método para volver a la página de inicio
   goHome(): void {
     this.router.navigate(['/']);
   }
