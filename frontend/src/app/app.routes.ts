@@ -7,7 +7,6 @@ import { LoginRegisterComponent } from './auth/login-register/login-register.com
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { path: 'home', component: HomeComponent },
     { path: 'cliente', component: ClienteComponent },
     { path:'vendedor', component: VendedorComponent},
     { path:'perfil/:rol', component: PerfilComponent},

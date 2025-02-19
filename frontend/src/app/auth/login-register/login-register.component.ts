@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service'; 
 
 @Component({
   selector: 'app-login-register',
@@ -15,7 +16,8 @@ export class LoginRegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -41,8 +43,7 @@ export class LoginRegisterComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
         confirmPassword: ['', Validators.required],
-        role: ['cliente', Validators.required],
-        businessName: [''] // Inicializa el campo businessName vacío
+        role: ['cliente', Validators.required]
       }, { validator: this.passwordMatchValidator });
     }
   }
@@ -59,25 +60,71 @@ export class LoginRegisterComponent implements OnInit {
     if (role === 'vendedor') {
       this.authForm.addControl('businessName', new FormControl('', Validators.required));
     } else {
-      this.authForm.removeControl('businessName');
+      if (this.authForm.get('businessName')) {
+        this.authForm.removeControl('businessName');
+      }
     }
   }
 
-  onSubmit(): void {
-    if (this.authForm.invalid) {
-      console.log('Formulario inválido');
-      return;
-    }
-    
-    if (this.isLogin) {
-      // Lógica para iniciar sesión
-      console.log('Iniciando sesión con:', this.authForm.value);
-      // Aquí podrías llamar a un servicio de autenticación
-    } else {
-      // Lógica para registro
-      console.log('Registrando usuario con:', this.authForm.value);
-      // Aquí podrías llamar a un servicio de registro
-    }
+  // Enviar formulario
+// Método que maneja el envío del formulario
+onSubmit(): void {
+  if (this.authForm.invalid) {
+    console.log('Formulario inválido');
+    return;
+  }
+
+  if (this.isLogin) {
+    // Lógica de login
+    this.authService.login(this.authForm.value).subscribe({
+      next: (res) => {
+        console.log('Login exitoso:', res);
+        // Aquí puedes redirigir según el rol del usuario
+        const role = res.role; // Asegúrate de que el backend devuelve el rol
+        if (role === 'vendedor') {
+          this.router.navigate(['/home/vendedor']); // Redirige a /home/vendedor si el rol es vendedor
+        } else if (role === 'cliente') {
+          this.router.navigate(['/home/cliente']); // Redirige a /home/cliente si el rol es cliente
+        }
+      },
+      error: (err) => {
+        console.error('Error en login:', err);
+      }
+    });
+  } else {
+    // Lógica de registro
+    this.authService.register(this.authForm.value).subscribe({
+      next: (res) => {
+        console.log('Registro exitoso:', res);
+        // Aquí también redirigimos según el rol del usuario
+        const role = this.authForm.get('role')?.value; // Utilizamos el valor del formulario, ya que el backend puede no devolver el rol después del registro
+        if (role === 'vendedor') {
+          this.router.navigate(['/home/vendedor']); // Redirige a /home/vendedor si el rol es vendedor
+        } else {
+          this.router.navigate(['/home/cliente']); // Redirige a /home/cliente si el rol es cliente
+        }
+      },
+      error: (err) => {
+        console.error('Error en registro:', err);
+      }
+    });
+  }
+}
+
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    // Implementación
+  }
+
+  private redirectByRole(role: string): void {
+    const route = role === 'vendedor' ? '/vendedor' : '/cliente';
+    this.router.navigate([route]);
+  }
+  
+  // Método para mostrar errores en la interfaz
+  showError(message: string): void {
+    // Aquí puedes usar un toast, un alert o un mensaje en el template
+    alert(message); // Ejemplo básico con alert
   }
   
   // Método para volver a la página de inicio
