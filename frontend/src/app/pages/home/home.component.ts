@@ -7,6 +7,7 @@ import { AutoAdBannerComponent } from '../../shared/components/auto-ad-banner/au
 import { FeaturedComponent } from '../../shared/components/featured/featured.component';
 import { SearchComponent } from '../../shared/components/search/search.component';
 import { AuthButtonComponent } from "../../shared/components/auth-button/auth-button.component";
+import { ProductsComponent } from "../../shared/components/products/products.component";
 
 @Component({
   selector: 'app-home',
