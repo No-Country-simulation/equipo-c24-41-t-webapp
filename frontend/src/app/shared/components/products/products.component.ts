@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { FavService } from '../../services/fav.service';
+import { ProductService } from '../../services/product.service';
 
 
 
@@ -14,21 +15,28 @@ import { FavService } from '../../services/fav.service';
 })
 export class ProductsComponent {
     // Lista de productos (puede ser estática o provenir de un servicio)
-    products: Product[] = [
-      { id: 1, nombre: 'Producto A', precio: 100, descripcion: 'Descripción A' },
-      { id: 2, nombre: 'Producto B', precio: 150, descripcion: 'Descripción B' },
-      // Más productos...
-    ];
+    products: Product[] = [];
 
       // Emisor para notificar que se agregó un producto
   @Output() agregarProducto = new EventEmitter<Product>();
   favorites: Product[] = [];
 
-  constructor(private favService: FavService) {
+  constructor(
+    private favService: FavService,
+    private productService: ProductService) 
+  {
     this.favService.favsItems$.subscribe(favs => {
       this.favorites = favs;
     });
   }
+
+// products.component.ts
+ngOnInit() {
+  this.productService.dynamicProductsPublic$.subscribe(() => {
+    this.products = this.productService.getAllProducts(); // 👈 Actualiza la lista
+  });
+}
+
   // Agregar al carrito
   onAgregar(product: Product): void {
     console.log('Producto agregado al carrito:', product);

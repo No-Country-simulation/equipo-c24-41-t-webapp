@@ -1,54 +1,91 @@
-<!-- Contenedor principal -->
 <div class="container my-5">
-    <!-- Título principal -->
     <h1 class="text-center mb-4">Sube tu anuncio</h1>
 
-    <!-- Contenedor de categorías -->
-    <div class="bg-light p-4 rounded shadow-sm">
-        <!-- Título  -->
+    <!-- Sección de Categorías (opcional) -->
+    <div class="bg-light p-4 rounded shadow-sm mb-4">
         <h2 class="text-center mb-3">¿Qué subirás?</h2>
-
-        <!-- Fila de botones | categorías -->
         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 text-center">
-            <!--  Joyería -->
-            <div class="col">
-                <button class="btn btn-outline-primary w-100 p-3 d-flex flex-column align-items-center">
-                    <img src="https://placehold.co/50x50" alt="Icon representing items you no longer need" class="mb-2">
-                    <span>Joyería</span>
-                </button>
-            </div>
-
-            <!--  Pintura y Arte -->
-            <div class="col">
-                <button class="btn btn-outline-primary w-100 p-3 d-flex flex-column align-items-center">
-                    <img src="https://placehold.co/50x50" alt="Icon representing employment" class="mb-2">
-                    <span>Pintura y Arte</span>
-                </button>
-            </div>
-
-            <!--  Accesorios para el hogar -->
-            <div class="col">
-                <button class="btn btn-outline-primary w-100 p-3 d-flex flex-column align-items-center">
-                    <img src="https://placehold.co/50x50" alt="Icon representing services" class="mb-2">
-                    <span>Accesorios para el hogar</span>
-                </button>
-            </div>
-
-            <!--  Productos ecológicos -->
-            <div class="col">
-                <button class="btn btn-outline-primary w-100 p-3 d-flex flex-column align-items-center">
-                    <img src="https://placehold.co/50x50" alt="Icon representing a vehicle" class="mb-2">
-                    <span>Productos ecológicos</span>
-                </button>
-            </div>
-
-            <!--  Alimentos Artesanales -->
-            <div class="col">
-                <button class="btn btn-outline-primary w-100 p-3 d-flex flex-column align-items-center">
-                    <img src="https://placehold.co/50x50" alt="Icon representing a property" class="mb-2">
-                    <span>Alimentos Artesanales</span>
-                </button>
-            </div>
+            <!-- Tus botones de categorías existentes -->
+            <!-- ... -->
         </div>
+    </div>
+
+    <!-- Formulario de Publicación -->
+    <div class="bg-light p-4 rounded shadow-sm">
+        <form *ngIf="formVisible" (ngSubmit)="onSubmit()" [formGroup]="productForm">
+            <div class="row g-3">
+                <!-- Nombre -->
+                <div class="col-md-6">
+                    <label class="form-label">Nombre del Producto</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        formControlName="nombre"
+                        placeholder="Ej: Collar de plata"
+                    >
+                </div>
+
+                <!-- Precio -->
+                <div class="col-md-6">
+                    <label class="form-label">Precio (USD)</label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        formControlName="precio"
+                        placeholder="Ej: 50"
+                    >
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-12">
+                    <label class="form-label">Descripción</label>
+                    <textarea 
+                        class="form-control" 
+                        formControlName="descripcion"
+                        rows="3"
+                        placeholder="Describe tu producto..."
+                    ></textarea>
+                </div>
+
+                <!-- Imagen -->
+                <div class="col-12">
+                    <label class="form-label">URL de la Imagen</label>
+                    <input 
+                        type="url" 
+                        class="form-control" 
+                        formControlName="imagen"
+                        placeholder="Ej: https://mis-imagenes.com/collar.jpg"
+                    >
+                </div>
+
+                <!-- Botones -->
+                <div class="col-12 text-end">
+                    <button 
+                        type="button" 
+                        class="btn btn-outline-danger me-2" 
+                        (click)="toggleForm()"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary" 
+                        [disabled]="!productForm.valid"
+                    >
+                        Publicar Producto
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Botón para mostrar el formulario -->
+        <button 
+            *ngIf="!formVisible" 
+            (click)="toggleForm()" 
+            class="btn btn-success w-100"
+        >
+            <i class="bi bi-plus-circle me-2"></i>
+            Crear Nuevo Anuncio
+        </button>
     </div>
 </div>
