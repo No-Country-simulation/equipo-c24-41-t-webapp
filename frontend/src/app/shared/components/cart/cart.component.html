@@ -1,12 +1,11 @@
 <!-- Ícono del carrito -->
-<div class="d-flex align-items-center">
-  <div class="cart-icon position-relative" (click)="toggleCartDetails()">
-    <i class="bi bi-cart fs-3 text-muted"></i>
-    <span class="position-absolute translate-middle badge rounded-pill bg-danger">
-      {{ (cartService.cartItems$ | async)?.length || 0 }}
-    </span>
-  </div>
-</div>
+<i class="bi bi-cart fs-3 text-muted position-relative" (click)="toggleCartDetails()">
+  <span class="cart-badge">
+    {{ (cartService.cartItems$ | async)?.length || 0 }}
+  </span>
+</i>
+
+
 
 <!-- Offcanvas del carrito -->
 <div id="cartOffcanvas" class="offcanvas offcanvas-end show-custom">
