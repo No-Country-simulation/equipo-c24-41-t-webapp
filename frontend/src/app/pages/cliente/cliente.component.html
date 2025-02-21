@@ -1,17 +1,24 @@
 
 <!-- header de la página -->
 <app-header>
-    <div class="d-flex align-items-center gap-3">
-        <!-- Componente de carrito  -->
-        <app-cart ></app-cart>
-        <!-- Icono de favoritos -->
-        <app-favs-icon></app-favs-icon>
-        <!-- Icono de perfil -->
-        <app-perfil-icon></app-perfil-icon>
-        <!-- Botón de vender -->
-        <app-sell-button></app-sell-button>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <app-cart></app-cart>
+        </div>
+        <div class="col-auto">
+          <app-favs-icon></app-favs-icon>
+        </div>
+        <div class="col-auto">
+          <app-perfil-icon></app-perfil-icon>
+        </div>
+        <div class="col-auto">
+          <app-sell-button></app-sell-button>
+        </div>
+      </div>
     </div>
-</app-header>
+  </app-header>
+  
 
 <!-- Componente de categorías -->
 <app-category></app-category>

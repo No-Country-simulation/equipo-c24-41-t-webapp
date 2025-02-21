@@ -1,8 +1,9 @@
-// product.model.ts
 export interface Product {
-    id: number;
-    nombre: string;
-    precio: number;
-    descripcion: string;
-    imagen?: string;
-  }
+  id: number; // desde la API debe llamarse.
+  nombre: string; // Nombre del producto, debe mapearse correctamente.
+  precio: number; // Precio, asegurarse de manejar la conversión si es necesario.
+  descripcion: string; // Descripción, debe coincidir con la API.
+  imagen?: string; // URL de la imagen del producto, si la API la proporciona.
+  vendedorId?: number;    // Nuevo: para identificar al vendedor
+  publicado?: boolean;    // Nuevo: para productos visibles a clientes
+}

@@ -1,0 +1,34 @@
+<app-header>
+    <app-home-button class="me-3"></app-home-button>
+    <app-perfil-icon></app-perfil-icon>
+</app-header>
+ <!-- Barra de búsqueda -->
+    <app-search class="d-block mx-auto my-5 w-50"></app-search>
+<div class="container mt-4">
+
+  
+    <!-- Resultados -->
+    <h3 *ngIf="searchQuery" class="mt-4">Resultados para "{{ searchQuery }}"</h3> 
+
+    
+    <div *ngIf="searchResults.length === 0" class="alert alert-warning mt-3">
+      No hay productos que coincidan con "{{ searchQuery }}".
+    </div>
+  
+    <div class="row mt-3">
+      <div *ngFor="let product of searchResults" class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img 
+            [src]="product.imagen || 'assets/default-product.jpg'" 
+            class="card-img-top"
+            alt="{{ product.nombre }}"
+          >
+          <div class="card-body">
+            <h5 class="card-title">{{ product.nombre }}</h5>
+            <p class="card-text">{{ product.descripcion }}</p>
+            <p class="text-success fw-bold">{{ product.precio | currency:'USD' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

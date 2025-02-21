@@ -7,9 +7,10 @@ import { Product } from '../models/product.model';
   providedIn: 'root'
 })
 export class CartService {
-  // Estado interno del carrito
+  // Estado interno del carrito (Actualmente solo maneja datos locales, Se debería sincronizarse con la API)
   private cartItems: CartItem[] = [];
-  // BehaviorSubject para emitir cambios en el carrito
+
+  // BehaviorSubject para emitir cambios en el carrito (Debería inicializarse con los datos del backend)
   private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.cartItems);
   cartItems$ = this.cartItemsSubject.asObservable();
 
@@ -29,6 +30,8 @@ export class CartService {
       });
     }
     this.cartItemsSubject.next(this.cartItems);
+
+    // Acá debe enviarse una solicitud a la API para actualizar el carrito del usuario
   }
 
   // Método para actualizar la cantidad de un producto en el carrito
@@ -38,6 +41,8 @@ export class CartService {
       this.cartItems[index].cantidad = cantidad;
       this.cartItems[index].total = this.cartItems[index].cantidad * this.cartItems[index].producto.precio;
       this.cartItemsSubject.next(this.cartItems);
+
+      // Aca se debe hacer una llamada a la API para actualizar la cantidad en el backend
     }
   }
 
@@ -45,14 +50,19 @@ export class CartService {
   removeProduct(productId: number): void {
     this.cartItems = this.cartItems.filter(item => item.producto.id !== productId);
     this.cartItemsSubject.next(this.cartItems);
+
+    // Aca se debe hacer la solicitud a la API para eliminar el producto del carrito en el backend
   }
 
-  // Método para calcular el total del carrito
+  // Método para calcular el total del carrito (Este cálculo puede hacerse localmente, pero después podría obtenerse de la API)
   getTotal(): number {
     return this.cartItems.reduce((total, item) => total + item.total, 0);
   }
+
+  // Método para vaciar el carrito
   clearCart(): void {
     this.cartItemsSubject.next([]);
+
+    //se debe enviar la solicitud a la API para vaciar el carrito del usuario en el backend
   }
-  
 }

@@ -14,3 +14,7 @@
   right: 28% !important;
   top: 70% !important; 
 }
+
+#cartOffcanvas {
+  max-width: 100%;
+}

@@ -1,38 +1,52 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
+
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  // Productos estáticos iniciales
+  // Productos estáticos iniciales (Estos productos deben ser reemplazados por datos de la API)
   private staticProducts: Product[] = [
     { id: 1, nombre: 'Producto A', precio: 100, descripcion: 'Descripción A' },
     { id: 2, nombre: 'Producto B', precio: 150, descripcion: 'Descripción B' },
   ];
 
-  // Fuente de datos para productos dinámicos
+  // Fuente de datos para productos dinámicos (Esto debe ser reemplazado por los productos de la API)
   private dynamicProductsSource = new BehaviorSubject<Product[]>([]);  
 
+  // Observable para exponer los productos dinámicos (se mantendrá para productos obtenidos de la API)
   public dynamicProductsPublic$: Observable<Product[]> = this.dynamicProductsSource.asObservable();
 
   // Combina productos estáticos + dinámicos
+  // En el futuro, esta función debería fusionar los productos estáticos con los que provengan de la API(Aunque los productos estaticos ya no serán necesarios).
   getAllProducts(): Product[] {
-    return [...this.staticProducts, ...this.dynamicProductsSource.value]; // Accede al value
+    return [...this.staticProducts, ...this.dynamicProductsSource.value]; // Accede al value para obtener los productos dinámicos
   }
 
   // Añade un nuevo producto con ID único
+  // Aca se tiene cambiar la lógica para enviar el producto a la API en vez de solo agregarlo localmente.
   addProduct(newProduct: Omit<Product, 'id'>): void {
     const newId = this.generateNewId();
     const productWithId: Product = { ...newProduct, id: newId };
-    // Usa dynamicProductsSource (no dynamicProducts$)
+    // Usa dynamicProductsSource (actualmente agrega el producto al estado local, en el futuro se debe realizar una llamada a la API)
     const currentDynamicProducts = this.dynamicProductsSource.value;
     this.dynamicProductsSource.next([...currentDynamicProducts, productWithId]);
   }
 
-  // Genera un ID único evitando colisiones con estáticos
+  // Genera un ID único evitando colisiones con los productos estáticos (esto es local, pero deberías obtener un ID de la API más adelante)
   private generateNewId(): number {
     const maxStaticId = Math.max(...this.staticProducts.map(p => p.id));
-    // Usa dynamicProductsSource.value (no dynamicProducts$)
+    //Se usa dynamicProductsSource.value para calcular el ID, pero en la API se deberia permitir gestione este ID
     return maxStaticId + this.dynamicProductsSource.value.length + 1;
   }
 
+    // Método de búsqueda 
+    searchProducts(query: string): Observable<Product[]> {
+      const allProducts = [...this.staticProducts, ...this.dynamicProductsSource.value];
+      const filtered = allProducts.filter(product => 
+        product.nombre.toLowerCase().includes(query.toLowerCase()) ||
+        product.descripcion.toLowerCase().includes(query.toLowerCase())
+      );
+      return of(filtered);
+    }
+  
 }
