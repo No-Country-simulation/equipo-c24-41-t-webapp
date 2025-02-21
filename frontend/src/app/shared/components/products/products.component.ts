@@ -1,22 +1,34 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../../core/services/cart.service';
+import { FormsModule } from '@angular/forms';
+import { Product } from '../../models/product.model';
+
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent {
-  cartService = inject(CartService);
+    // Lista de productos (puede ser estática o provenir de un servicio)
+    products: Product[] = [
+      { id: 1, nombre: 'Producto A', precio: 100, descripcion: 'Descripción A' },
+      { id: 2, nombre: 'Producto B', precio: 150, descripcion: 'Descripción B' },
+      // Más productos...
+    ];
 
-  products = [
-    { name: 'Pan casero', price: 500 },
-    { name: 'Tortitas', price: 300 },
-  ];
+      // Emisor para notificar que se agregó un producto
+  @Output() agregarProducto = new EventEmitter<Product>();
 
-  addToCart(product: { name: string; price: number }) {
-    this.cartService.add(product);
+      // Función para emitir el evento al hacer clic
+  onAgregar(product: Product): void {
+    console.log('Recibido en ClienteComponent:', product);
+
+    this.agregarProducto.emit(product);
   }
+  
 }
+
+
+

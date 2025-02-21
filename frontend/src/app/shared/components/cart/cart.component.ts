@@ -1,25 +1,57 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../../core/services/cart.service';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CartItem } from '../../models/cart.model';
+import { CartService } from '../../services/cart.service';
+
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-cart',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+  styleUrls: ['./cart.component.css'],
 })
 export class CartComponent {
-  cartService = inject(CartService);
-  cart = this.cartService.cart;  // Usamos el signal del servicio
-  isOpen = false;
 
-  // Toggle para abrir y cerrar el carrito
-  toggleCart() {
-    this.isOpen = !this.isOpen;
+  constructor(public cartService: CartService) {}
+
+  incrementar(item: CartItem): void {
+    this.cartService.updateQuantity(item.producto.id, item.cantidad + 1);
   }
 
-  // Método para eliminar un producto del carrito
-  remove(index: number) {
-    this.cartService.remove(index);
+  decrementar(item: CartItem): void {
+    if (item.cantidad > 1) {
+      this.cartService.updateQuantity(item.producto.id, item.cantidad - 1);
+    }
+  }
+
+  eliminar(productId: number): void {
+    this.cartService.removeProduct(productId);
+  }
+
+  // trackBy para optimizar el *ngFor
+  trackByProduct(index: number, item: CartItem): number {
+    return item.producto.id;
+  }
+
+  toggleCartDetails(): void {
+    const offcanvas = document.getElementById('cartOffcanvas');
+    if (offcanvas) {
+      // Crear una instancia del offcanvas de Bootstrap
+      const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
+      // Alternar entre abrir y cerrar el offcanvas
+      bsOffcanvas.toggle();
+    }
+  }
+
+  // Función vaciarCarrito dentro de la clase CartComponent
+  vaciarCarrito(): void {
+    this.cartService.clearCart();
   }
 }

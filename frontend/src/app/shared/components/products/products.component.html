@@ -1,16 +1,14 @@
-<div class="container mt-4">
-    <div class="row">
-      <div class="col-md-4" *ngFor="let product of products">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text">${{ product.price }}</p>
-            <button class="btn btn-primary" (click)="addToCart(product)">
-              Agregar al carrito
-            </button>
-          </div>
-        </div>
+<!-- products.component.html -->
+<div class="row">
+  <div class="col-md-4" *ngFor="let product of products">
+    <div class="card mb-3">
+      <img *ngIf="product.imagen" [src]="product.imagen" class="card-img-top" alt="{{ product.nombre }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ product.nombre }}</h5>
+        <p class="card-text">{{ product.descripcion }}</p>
+        <p class="card-text"><strong>${{ product.precio }}</strong></p>
+        <button (click)="onAgregar(product)" class="btn btn-primary">Agregar al carrito</button>
       </div>
     </div>
   </div>
-  
+</div>

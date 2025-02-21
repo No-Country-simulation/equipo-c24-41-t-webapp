@@ -10,6 +10,8 @@ import { Component } from '@angular/core';
 export class AutoAdBannerComponent {
   currentPromo = 1;
 
+  title = "Taller del Artesano";
+
 
   constructor() {
     setInterval(() => {

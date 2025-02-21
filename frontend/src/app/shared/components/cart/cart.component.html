@@ -1,28 +1,31 @@
-<div class="position-relative">
-    <i class="bi bi-cart fs-3 text-secondary ms-auto me-3 d-flex align-items-center" (click)="toggleCart()"></i>
-    <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" 
-          *ngIf="cart().length">
-      {{ cart().length }}
+<!-- Ícono del carrito -->
+<div class="d-flex align-items-center">
+  <!-- Ícono del carrito con separación -->
+  <div class="cart-icon position-relative ms-3" (click)="toggleCartDetails()">
+    <i class="bi bi-cart fs-3 text-muted"></i>
+    <span class="position-absolute top-50 end-50 translate-middle badge rounded-pill bg-danger">
+      {{ (cartService.cartItems$ | async)?.length || 0 }}
     </span>
-  
   </div>
-  
-  <div class="offcanvas offcanvas-end show" tabindex="-1" *ngIf="isOpen">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title">Carrito de Compras</h5>
-      <button type="button" class="btn-close" (click)="toggleCart()"></button>
-    </div>
-    <div class="offcanvas-body">
-      <ul class="list-group" *ngIf="cart().length; else emptyCart">
-        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let product of cart(); let i = index">
-          {{ product.name }} - ${{ product.price }}
-          <span class="badge bg-primary rounded-pill">{{ product.quantity }}</span>
-          <button class="btn btn-sm btn-danger" (click)="remove(i)">X</button>
-        </li>
-      </ul>
-      <ng-template #emptyCart>
-        <p class="text-muted">El carrito está vacío.</p>
-      </ng-template>
-    </div>
+</div>
+
+
+<!-- Offcanvas del carrito -->
+<div id="cartOffcanvas" class="offcanvas offcanvas-end show-custom">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Carrito de Compras</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  
+  <div class="offcanvas-body">
+    <div *ngIf="(cartService.cartItems$ | async)?.length; else emptyCart">
+      <div *ngFor="let item of cartService.cartItems$ | async" class="cart-item">
+        <span>{{ item.producto.nombre }} ({{ item.cantidad }})</span>
+        <span>${{ item.total }}</span>
+      </div>
+      <button class="btn btn-danger w-100 mt-3" (click)="vaciarCarrito()">Vaciar carrito</button>
+    </div>
+    <ng-template #emptyCart>
+      <p class="text-center text-muted">El carrito está vacío.</p>
+    </ng-template>
+  </div>
+</div>

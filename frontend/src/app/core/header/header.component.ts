@@ -14,6 +14,9 @@ export class HeaderComponent {
   private lastScrollTop = 0;
   private readonly threshold = 10; // diferencia mínima para detectar dirección
 
+  title = "Taller del Artesano";
+
+
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     const currentScroll = window.scrollY || document.documentElement.scrollTop;

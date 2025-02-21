@@ -1,16 +1,16 @@
+
 <!-- header de la página -->
-<app-header>      
-    <!-- Componente de carrito  -->
-    <app-cart></app-cart>
-
-    <!-- Icono de favoritos -->
-    <app-favs-icon></app-favs-icon>
-
-    <!-- Icono de perfil -->
-    <app-perfil-icon></app-perfil-icon>
-
-    <!-- Botón de vender -->
-    <app-sell-button></app-sell-button>
+<app-header>
+    <div class="d-flex align-items-center gap-3">
+        <!-- Componente de carrito  -->
+        <app-cart ></app-cart>
+        <!-- Icono de favoritos -->
+        <app-favs-icon></app-favs-icon>
+        <!-- Icono de perfil -->
+        <app-perfil-icon></app-perfil-icon>
+        <!-- Botón de vender -->
+        <app-sell-button></app-sell-button>
+    </div>
 </app-header>
 
 <!-- Componente de categorías -->
@@ -21,8 +21,7 @@
 
 <!-- Sección de productos destacados -->
 
-<app-products></app-products>
-
+<app-products (agregarProducto)="onAgregarProducto($event)"></app-products>
 
 <!-- footer de la página -->
 <app-footer></app-footer>
