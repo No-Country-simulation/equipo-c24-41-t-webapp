@@ -1,4 +1,3 @@
-<!-- products.component.html -->
 <div class="row">
   <div class="col-md-4" *ngFor="let product of products">
     <div class="card mb-3">
@@ -8,6 +7,14 @@
         <p class="card-text">{{ product.descripcion }}</p>
         <p class="card-text"><strong>${{ product.precio }}</strong></p>
         <button (click)="onAgregar(product)" class="btn btn-primary">Agregar al carrito</button>
+        <button (click)="onToggleFav(product)"
+        [ngClass]="{'btn-danger': isFavorite(product), 'btn-outline-secondary': !isFavorite(product)}"
+        class="btn ms-2">
+        <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i>
+        Favoritos
+      </button>
+      
+      
       </div>
     </div>
   </div>

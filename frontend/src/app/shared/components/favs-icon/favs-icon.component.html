@@ -1,2 +1,23 @@
-<!-- icono de favoritos -->
-<i class="bi bi-heart fs-3 text-secondary ms-auto me-3 d-flex align-items-center"></i>
+<!-- Icono de favoritos con evento click -->
+<i class="bi bi-heart fs-3 text-secondary ms-auto me-3 d-flex align-items-center"
+   (click)="toggleFavsDetails()"></i>
+
+<!-- Offcanvas de Favoritos -->
+<div id="favsOffcanvas" class="offcanvas offcanvas-end show-custom">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Favoritos</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div *ngIf="(favsService.favsItems$ | async)?.length; else noFavs">
+      <div *ngFor="let fav of favsService.favsItems$ | async" class="favs-item">
+        <span>{{ fav.nombre }}</span>
+        <!-- Puedes agregar más detalles del producto si lo requieres -->
+      </div>
+      <button class="btn btn-danger w-100 mt-3" (click)="clearFavorites()">Vaciar favoritos</button>
+    </div>
+    <ng-template #noFavs>
+      <p class="text-center text-muted">No tienes productos favoritos.</p>
+    </ng-template>
+  </div>
+</div>

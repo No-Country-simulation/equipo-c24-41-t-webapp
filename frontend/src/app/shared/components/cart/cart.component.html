@@ -1,14 +1,12 @@
 <!-- Ícono del carrito -->
 <div class="d-flex align-items-center">
-  <!-- Ícono del carrito con separación -->
-  <div class="cart-icon position-relative ms-3" (click)="toggleCartDetails()">
+  <div class="cart-icon position-relative" (click)="toggleCartDetails()">
     <i class="bi bi-cart fs-3 text-muted"></i>
-    <span class="position-absolute top-50 end-50 translate-middle badge rounded-pill bg-danger">
+    <span class="position-absolute translate-middle badge rounded-pill bg-danger">
       {{ (cartService.cartItems$ | async)?.length || 0 }}
     </span>
   </div>
 </div>
-
 
 <!-- Offcanvas del carrito -->
 <div id="cartOffcanvas" class="offcanvas offcanvas-end show-custom">

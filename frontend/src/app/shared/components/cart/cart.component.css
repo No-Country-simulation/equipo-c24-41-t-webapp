@@ -9,3 +9,8 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.cart-icon .badge {
+  right: 28% !important;
+  top: 70% !important; 
+}

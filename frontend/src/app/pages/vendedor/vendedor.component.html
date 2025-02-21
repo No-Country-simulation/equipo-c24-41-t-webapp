@@ -1,16 +1,20 @@
 <!-- Header de la página -->
 <app-header>
-    <div class="d-flex justify-content-between align-items-center">
-        <!-- Componente de búsqueda -->
-        <app-search class="d-flex w-75 me-auto"></app-search>
-
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <!-- Componente de búsqueda -->
+      <app-search></app-search>
+    </div>
+      <!-- Contenedor para los íconos de la derecha -->
+      <div class="d-flex align-items-center gap-3">
         <!-- Icono perfil -->
         <app-perfil-icon></app-perfil-icon>
-
+  
         <!-- Botón comprar -->
         <app-sell-button></app-sell-button>
-    </div>
-</app-header>
+      </div>
+
+  </app-header>
+  
 
 <!-- Componente de categorías -->
 <app-category></app-category>
