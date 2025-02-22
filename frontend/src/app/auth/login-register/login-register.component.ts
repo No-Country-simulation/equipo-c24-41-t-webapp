@@ -1,20 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login-register',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login-register.component.html',
   styleUrls: ['./login-register.component.css']
 })
 export class LoginRegisterComponent implements OnInit {
   authForm!: FormGroup;
-  isLogin: boolean = true; // true: login, false: registro
+  isLogin = signal<boolean>(true);
+  isLoading = signal<boolean>(false);
+  errorMessage = signal<string | null>(null);
+
+
 
   constructor(
     private fb: FormBuilder,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
@@ -24,13 +30,13 @@ export class LoginRegisterComponent implements OnInit {
 
   // Cambia entre modo login y registro y reinicializa el formulario
   toggleMode(isLogin: boolean): void {
-    this.isLogin = isLogin;
+    this.isLogin.set(isLogin);
     this.initForm();
   }
 
   // Inicializa el formulario según el modo
   initForm(): void {
-    if (this.isLogin) {
+    if (this.isLogin()) {
       this.authForm = this.fb.group({
         email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required]
@@ -65,7 +71,36 @@ export class LoginRegisterComponent implements OnInit {
   }
 
 
+onSubmit(): void {
+  if (this.authForm.invalid) return;
 
+  this.isLoading.set(true);
+  this.errorMessage.set(null);
+
+  const formData = this.authForm.value;
+
+  if (this.isLogin()) {
+    this.authService.login({
+      email: formData.email,
+      password: formData.password
+    }).subscribe({
+      next: () => this.isLoading.set(false),
+      error: (err) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.message);
+      }
+    });
+  } else {
+    const { confirmPassword, ...registerData } = formData;
+    this.authService.register(registerData).subscribe({
+      next: () => this.isLoading.set(false),
+      error: (err) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.message);
+      }
+    });
+  }
+}
 
   
   // Método para volver a la página de inicio

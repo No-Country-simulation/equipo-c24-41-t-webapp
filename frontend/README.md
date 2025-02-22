@@ -1,59 +1,33 @@
-# Frontend
+# Equipo C24-41-T WebApp - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+Este repositorio contiene el código fuente del frontend de la aplicación web de nuestro equipo.
 
-## Development server
+## 🚀 Descripción
 
-To start a local development server, run:
+La aplicación frontend es el punto de interacción para los usuarios, ofreciendo dos vistas principales: **/cliente** y **/vendedor**. La vista **/cliente** está diseñada para brindar a los usuarios una experiencia optimizada en la navegación y gestión de sus datos, mientras que la vista **/vendedor** permite a los comerciantes interactuar, gestionar sus productos y atender las solicitudes de los clientes. Ambas interfaces se comunican de forma dinámica con la API del backend, permitiendo actualizaciones en tiempo real y una interacción fluida entre clientes y vendedores.
 
-```bash
-ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🛠️ Tecnologías Utilizadas
 
-## Code scaffolding
+- **Angular 19**: Framework principal para el desarrollo de la aplicación.
+- **TypeScript**: Lenguaje de programación que mejora la escalabilidad y robustez del código.
+- **HTML5 & CSS3**: Estructura y estilos de la interfaz.
+- **RxJS**: Librería para programación reactiva.
+- **Zone.js**: Manejo de contextos de ejecución en Angular.
+- **Angular CLI**: Herramienta para la creación, desarrollo y despliegue del proyecto.
+- **Jasmine & Karma**: Herramientas para realizar pruebas unitarias y de integración.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 💻 Requisitos
 
-```bash
-ng generate component component-name
-```
+- Node.js (>= 16.x)
+- npm
+- Angular CLI instalado globalmente  
+  *(Puedes instalarlo con `npm install -g @angular/cli`)*
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📦 Instalación
 
-```bash
-ng generate --help
-```
+1. Clona el repositorio:
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+   ```bash
+   git clone https://github.com/tu-usuario/equipo-c24-41-t-webapp-frontend.git
+   cd equipo-c24-41-t-webapp-frontend
