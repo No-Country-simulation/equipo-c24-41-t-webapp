@@ -5,51 +5,97 @@
   </div>
 </app-header>
 
-
-
 <app-category></app-category>
 
 <main class="container my-4">
-  <h2 class="text-center">Perfil de {{ rol | titlecase }}</h2>
-
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card shadow">
         <div class="card-body">
-          <ng-container [ngSwitch]="rol">
-            <!-- Perfil de Cliente -->
-            <div *ngSwitchCase="'cliente'">
-              <h3 class="text-primary">Perfil de Cliente</h3>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <strong>Nombre:</strong> {{ cliente?.nombre }} {{ cliente?.apellido }}
-                </li>
-                <li class="list-group-item">
-                  <strong>Email:</strong> {{ cliente?.email }}
-                </li>
-              </ul>
+          <div class="d-flex justify-content-end align-items-center mb-3">
+
+            <button 
+              *ngIf="!editMode"
+              class="btn btn-primary"
+              (click)="toggleEdit()">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+          </div>
+
+          <form *ngIf="editMode; else viewModeTemplate" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <!-- Campos comunes -->
+            <div class="mb-3">
+              <label>Nombre</label>
+              <input formControlName="nombre" class="form-control">
+              <div *ngIf="profileForm.get('nombre')?.invalid" class="text-danger">
+                Nombre es requerido
+              </div>
             </div>
 
-            <!-- Perfil de Vendedor -->
-            <div *ngSwitchCase="'vendedor'">
-              <h3 class="text-success">Perfil de Vendedor</h3>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <strong>Nombre del Negocio:</strong> {{ vendedor?.negocio }}
-                </li>
-                <li class="list-group-item">
-                  <strong>Email:</strong> {{ vendedor?.email }}
-                </li>
-              </ul>
+
+
+            <div class="mb-3">
+              <label>Email</label>
+              <input formControlName="email" type="email" class="form-control">
+              <div *ngIf="profileForm.get('email')?.invalid" class="text-danger">
+                Email inválido
+              </div>
             </div>
- 
-            <!-- Caso no reconocido -->
-            <div *ngSwitchDefault>
-              <h3 class="text-danger">ERROR</h3>
-              <p>Por favor, inicia sesion y verifica tu cuenta.</p>
+
+            <!-- Campos específicos para vendedor -->
+            <div *ngIf="rol === 'vendedor'" class="mb-3">
+              <label>Nombre del Negocio</label>
+              <input formControlName="negocio" class="form-control">
+              <div *ngIf="profileForm.get('negocio')?.invalid" class="text-danger">
+                Nombre del negocio es requerido
+              </div>
             </div>
-            
-          </ng-container>
+
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="btn btn-secondary" (click)="toggleEdit()">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-success" [disabled]="profileForm.invalid">
+                Guardar
+              </button>
+            </div>
+          </form>
+
+          <ng-template #viewModeTemplate>
+            <ng-container [ngSwitch]="rol">
+              <!-- Perfil de Cliente -->
+              <div *ngSwitchCase="'cliente'">
+                <h3 class="text-primary">Perfil de Cliente</h3>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <strong>Nombre:</strong> {{ cliente?.nombre }} {{ cliente?.apellido }}
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Email:</strong> {{ cliente?.email }}
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Perfil de Vendedor -->
+              <div *ngSwitchCase="'vendedor'">
+                <h3 class="text-success">Perfil de Vendedor</h3>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <strong>Nombre del Negocio:</strong> {{ vendedor?.negocio }}
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Email:</strong> {{ vendedor?.email }}
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Caso no reconocido -->
+              <div *ngSwitchDefault>
+                <h3 class="text-danger">ERROR</h3>
+                <p>Por favor, inicia sesión y verifica tu cuenta.</p>
+              </div>
+            </ng-container>
+          </ng-template>
         </div>
       </div>
     </div>
