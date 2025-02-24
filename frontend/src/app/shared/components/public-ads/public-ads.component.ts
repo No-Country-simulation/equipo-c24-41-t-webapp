@@ -32,6 +32,11 @@ export class PublicAdsComponent {
       precio: [0, [Validators.required, Validators.min(0)]],
       descripcion: ['', Validators.maxLength(200)],
       imagen: ['', Validators.pattern(/^(http|https):\/\/[^ "]+$/)],
+      categoria: ['', Validators.required],
+      stock: [null, [Validators.min(0)]],
+      ubicacion: ['', Validators.maxLength(50)],
+      especificaciones: ['']
+  
     });
   }
 
@@ -50,6 +55,10 @@ onSubmit() {
       vendedorId: currentUser?.id, 
       publicado: true, 
       id: 0,
+      categoria: this.productForm.value.categoria,
+      stock: this.productForm.value.stock || 0,
+      ubicacion: this.productForm.value.ubicacion,
+      especificaciones: this.productForm.value.especificaciones
     } as Product;
 
     this.productService.addProduct(newProduct);

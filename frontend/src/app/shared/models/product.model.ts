@@ -6,4 +6,8 @@ export interface Product {
   imagen?: string; // URL de la imagen del producto, si la API la proporciona.
   vendedorId?: number;    //  para identificar al vendedor
   publicado?: boolean;    // para productos visibles a clientes
+  categoria?: string;
+  stock?: number;
+  ubicacion?: string;
+  especificaciones?: string;
 }

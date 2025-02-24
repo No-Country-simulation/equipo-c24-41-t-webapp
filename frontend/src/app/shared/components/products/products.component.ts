@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ViewChild,ElementRef,Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { FavService } from '../../services/fav.service';
 import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../../auth/auth.service';
+
+declare const window: any;
 
 @Component({
   selector: 'app-products',
@@ -15,10 +17,14 @@ import { AuthService } from '../../../auth/auth.service';
 export class ProductsComponent {
   // Lista de productos (puede ser estática o provenir de un servicio)
   products: Product[] = [];
+  favorites: Product[] = [];
+
+  selectedProduct: Product | null = null;
 
   // Emisor para notificar que se agregó un producto
   @Output() agregarProducto = new EventEmitter<Product>();
-  favorites: Product[] = [];
+  @ViewChild('productDetailsCanvas') productDetailsCanvas!: ElementRef;
+
 
   constructor(
     private authService: AuthService,
@@ -30,7 +36,8 @@ export class ProductsComponent {
     });
   }
 
-  // products.component.ts
+
+
   ngOnInit() {
     this.productService.dynamicProductsPublic$.subscribe(() => {
       this.products = this.productService.getAllProducts(); // 👈 Actualiza la lista
@@ -52,10 +59,24 @@ export class ProductsComponent {
   isFavorite(product: Product): boolean {
     return this.favorites.some((fav) => fav.id === product.id);
   }
-getVendedorName(vendedorId?: number): string {
-  if (!vendedorId) return 'Anónimo';
-  
-  const vendedor = this.authService.getUserById(vendedorId);
-  return vendedor?.businessName || vendedor?.name || 'Vendedor no registrado';
-}
+  getVendedorName(vendedorId?: number): string {
+    if (!vendedorId) return 'Anónimo';
+
+    const vendedor = this.authService.getUserById(vendedorId);
+    return vendedor?.businessName || vendedor?.name || 'Vendedor no registrado';
+  }
+  showProductDetails(product: Product): void {
+    this.selectedProduct = product;
+    
+    // Usar inicialización directa con el elemento de ViewChild
+    const offcanvas = new window.bootstrap.Offcanvas(
+      this.productDetailsCanvas.nativeElement
+    );
+    offcanvas.show();
+  }
+
+  // Método para cerrar el offcanvas
+  closeDetails(): void {
+    this.selectedProduct = null;
+  }
 }

@@ -1,0 +1,31 @@
+/* Mejorar la interactividad de las tarjetas */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Ajustes para el offcanvas */
+  .offcanvas-body {
+    overflow-y: auto;
+    font-size: 0.95rem;
+
+  }
+  
+  .offcanvas-header {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  /* Destacar títulos */
+  .offcanvas-title {
+    font-size: 1.8rem;
+  }
+  
+  /* Iconos descriptivos */
+  .bi-grid-fill, .bi-box-seam, .bi-geo-alt {
+    font-size: 1.5rem;
+    min-width: 30px;
+  }
