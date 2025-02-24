@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CartItem } from '../../models/cart.model';
 import { CartService } from '../../services/cart.service';
+import { Observable } from 'rxjs';
 
 declare const bootstrap: any;
 
@@ -18,8 +19,13 @@ declare const bootstrap: any;
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent {
+  cartItems$: Observable<CartItem[]>; // Declaración
 
-  constructor(public cartService: CartService) {}
+  constructor(public cartService: CartService) {
+    this.cartItems$ = this.cartService.cartItems$;
+  }
+
+
 
   incrementar(item: CartItem): void {
     this.cartService.updateQuantity(item.producto.id, item.cantidad + 1);

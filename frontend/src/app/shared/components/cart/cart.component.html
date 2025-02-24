@@ -1,7 +1,7 @@
 <!-- Ícono del carrito -->
 <i class="bi bi-cart fs-3 text-muted position-relative" (click)="toggleCartDetails()">
   <span class="cart-badge">
-    {{ (cartService.cartItems$ | async)?.length || 0 }}
+    {{ cartService.getTotalItems() }}
   </span>
 </i>
 

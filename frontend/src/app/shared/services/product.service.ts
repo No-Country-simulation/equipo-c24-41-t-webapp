@@ -8,7 +8,7 @@ export class ProductService {
   private staticProducts: Product[] = [
     {
       id: 1,
-      nombre: 'Cámara Profesional',
+      nombre: 'Camara Profesional',
       precio: 1200,
       descripcion: 'Cámara DSLR 24MP con lente 18-55mm',
       imagen: 'https://i.ibb.co/pjfbYjf1/camara-profecional.webp',
@@ -34,7 +34,6 @@ export class ProductService {
 
   // Añade un nuevo producto con ID único
   // Aca se tiene cambiar la lógica para enviar el producto a la API en vez de solo agregarlo localmente.
-  // En product.service.ts
   addProduct(newProduct: Omit<Product, 'id'>): void {
     const newId = this.generateNewId();
     console.log('Nuevo producto recibido:', newProduct);

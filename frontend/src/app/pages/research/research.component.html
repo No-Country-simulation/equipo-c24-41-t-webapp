@@ -16,19 +16,6 @@
     </div>
   
     <div class="row mt-3">
-      <div *ngFor="let product of searchResults" class="col-md-4 mb-4">
-        <div class="card h-100">
-          <img 
-            [src]="product.imagen || 'assets/default-product.jpg'" 
-            class="card-img-top"
-            alt="{{ product.nombre }}"
-          >
-          <div class="card-body">
-            <h5 class="card-title">{{ product.nombre }}</h5>
-            <p class="card-text">{{ product.descripcion }}</p>
-            <p class="text-success fw-bold">{{ product.precio | currency:'USD' }}</p>
-          </div>
-        </div>
-      </div>
+        <app-products></app-products>
     </div>
   </div>

@@ -8,11 +8,12 @@ import { SearchComponent } from '../../shared/components/search/search.component
 import { HeaderComponent } from '../../core/header/header.component';
 import { HomeButtonComponent } from '../../shared/components/home-button/home-button.component';
 import { PerfilIconComponent } from '../../shared/components/perfil-icon/perfil-icon.component';
+import { ProductsComponent } from '../../shared/components/products/products.component';
 
 
 @Component({
   selector: 'app-research',
-  imports: [CommonModule,FormsModule, SearchComponent, HeaderComponent, HomeButtonComponent,PerfilIconComponent],
+  imports: [CommonModule,FormsModule, SearchComponent, HeaderComponent, HomeButtonComponent,PerfilIconComponent, ProductsComponent],
   templateUrl: './research.component.html',
   styleUrl: './research.component.css'
 })

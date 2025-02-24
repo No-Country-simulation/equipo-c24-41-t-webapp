@@ -1,4 +1,11 @@
-import { ViewChild,ElementRef,Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ViewChild,
+  ElementRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
@@ -20,11 +27,12 @@ export class ProductsComponent {
   favorites: Product[] = [];
 
   selectedProduct: Product | null = null;
+  selectedProductId: number | null = null;
+  selectedQuantity: number = 1;
 
   // Emisor para notificar que se agregó un producto
   @Output() agregarProducto = new EventEmitter<Product>();
   @ViewChild('productDetailsCanvas') productDetailsCanvas!: ElementRef;
-
 
   constructor(
     private authService: AuthService,
@@ -35,8 +43,6 @@ export class ProductsComponent {
       this.favorites = favs;
     });
   }
-
-
 
   ngOnInit() {
     this.productService.dynamicProductsPublic$.subscribe(() => {
@@ -67,12 +73,38 @@ export class ProductsComponent {
   }
   showProductDetails(product: Product): void {
     this.selectedProduct = product;
-    
+
     // Usar inicialización directa con el elemento de ViewChild
     const offcanvas = new window.bootstrap.Offcanvas(
       this.productDetailsCanvas.nativeElement
     );
     offcanvas.show();
+  }
+
+  // Método para mostrar el selector de cantidad
+  showQuantitySelector(productId: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.selectedProductId = productId;
+    this.selectedQuantity = 1;
+  }
+
+  // Ajustar cantidad
+  adjustQuantity(amount: number): void {
+    this.selectedQuantity = Math.max(1, this.selectedQuantity + amount);
+  }
+
+  // Confirmar adición al carrito
+  confirmAddToCart(product: Product): void {
+    if (this.selectedQuantity > 0) {
+      for (let i = 0; i < this.selectedQuantity; i++) {
+        this.agregarProducto.emit(product);
+      }
+    }
+    this.selectedProductId = null;
+  }
+  cancelSelection(): void {
+    this.selectedProductId = null;
+    this.selectedQuantity = 1;
   }
 
   // Método para cerrar el offcanvas

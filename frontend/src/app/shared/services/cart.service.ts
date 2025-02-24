@@ -14,25 +14,34 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.cartItems);
   cartItems$ = this.cartItemsSubject.asObservable();
 
-  // Método para agregar un producto al carrito
-  addProduct(product: Product): void {
-    const index = this.cartItems.findIndex(item => item.producto.id === product.id);
-    if (index > -1) {
-      // El producto ya existe; incrementar cantidad y actualizar total
-      this.cartItems[index].cantidad += 1;
-      this.cartItems[index].total = this.cartItems[index].cantidad * product.precio;
-    } else {
-      // Agregar nuevo producto con cantidad inicial de 1
-      this.cartItems.push({
-        producto: product,
-        cantidad: 1,
-        total: product.precio
-      });
+    // Método para obtener el total de items
+    getTotalItems(): number {
+      return this.cartItems.reduce(
+        (total: number, item: CartItem) => total + item.cantidad, 
+        0
+      );
     }
-    this.cartItemsSubject.next(this.cartItems);
 
-    // Acá debe enviarse una solicitud a la API para actualizar el carrito del usuario
+  // Método para agregar un producto al carrito
+  addProduct(product: Product, quantity: number = 1): void {
+  const updatedCart = [...this.cartItems];
+  
+  const existingItem = updatedCart.find(item => item.producto.id === product.id);
+    
+  if (existingItem) {
+    existingItem.cantidad += quantity;
+    existingItem.total = existingItem.cantidad * product.precio;
+  } else {
+    updatedCart.push({
+      producto: product,
+      cantidad: quantity,
+      total: product.precio * quantity
+    });
   }
+  
+  this.cartItems = updatedCart; // Actualizar array interno
+  this.cartItemsSubject.next(this.cartItems); // Notificar cambios
+}
 
   // Método para actualizar la cantidad de un producto en el carrito
   updateQuantity(productId: number, cantidad: number): void {
@@ -61,8 +70,7 @@ export class CartService {
 
   // Método para vaciar el carrito
   clearCart(): void {
-    this.cartItemsSubject.next([]);
-
-    //se debe enviar la solicitud a la API para vaciar el carrito del usuario en el backend
+    this.cartItems = []; // Limpiar array interno
+    this.cartItemsSubject.next(this.cartItems); // Notificar cambios
   }
 }
