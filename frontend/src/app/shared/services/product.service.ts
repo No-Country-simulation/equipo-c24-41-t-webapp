@@ -24,13 +24,18 @@ export class ProductService {
 
   // Añade un nuevo producto con ID único
   // Aca se tiene cambiar la lógica para enviar el producto a la API en vez de solo agregarlo localmente.
-  addProduct(newProduct: Omit<Product, 'id'>): void {
-    const newId = this.generateNewId();
-    const productWithId: Product = { ...newProduct, id: newId };
-    // Usa dynamicProductsSource (actualmente agrega el producto al estado local, en el futuro se debe realizar una llamada a la API)
-    const currentDynamicProducts = this.dynamicProductsSource.value;
-    this.dynamicProductsSource.next([...currentDynamicProducts, productWithId]);
-  }
+// En product.service.ts
+addProduct(newProduct: Omit<Product, 'id'>): void {
+  const newId = this.generateNewId();
+  const productWithId: Product = { 
+    ...newProduct,
+    id: newId,
+    vendedorId: newProduct.vendedorId // Asegurar que se guarde esta propiedad
+  };
+  
+  const currentDynamicProducts = this.dynamicProductsSource.value;
+  this.dynamicProductsSource.next([...currentDynamicProducts, productWithId]);
+}
 
   // Genera un ID único evitando colisiones con los productos estáticos (esto es local, pero deberías obtener un ID de la API más adelante)
   private generateNewId(): number {

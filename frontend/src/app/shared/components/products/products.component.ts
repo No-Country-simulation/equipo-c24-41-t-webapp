@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { FavService } from '../../services/fav.service';
 import { ProductService } from '../../services/product.service';
-
-
+import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -14,28 +13,29 @@ import { ProductService } from '../../services/product.service';
   styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent {
-    // Lista de productos (puede ser estática o provenir de un servicio)
-    products: Product[] = [];
+  // Lista de productos (puede ser estática o provenir de un servicio)
+  products: Product[] = [];
 
-      // Emisor para notificar que se agregó un producto
+  // Emisor para notificar que se agregó un producto
   @Output() agregarProducto = new EventEmitter<Product>();
   favorites: Product[] = [];
 
   constructor(
+    private authService: AuthService,
     private favService: FavService,
-    private productService: ProductService) 
-  {
-    this.favService.favsItems$.subscribe(favs => {
+    private productService: ProductService
+  ) {
+    this.favService.favsItems$.subscribe((favs) => {
       this.favorites = favs;
     });
   }
 
-// products.component.ts
-ngOnInit() {
-  this.productService.dynamicProductsPublic$.subscribe(() => {
-    this.products = this.productService.getAllProducts(); // 👈 Actualiza la lista
-  });
-}
+  // products.component.ts
+  ngOnInit() {
+    this.productService.dynamicProductsPublic$.subscribe(() => {
+      this.products = this.productService.getAllProducts(); // 👈 Actualiza la lista
+    });
+  }
 
   // Agregar al carrito
   onAgregar(product: Product): void {
@@ -50,10 +50,12 @@ ngOnInit() {
 
   // Verifica si el producto ya está en favoritos
   isFavorite(product: Product): boolean {
-    return this.favorites.some(fav => fav.id === product.id);
+    return this.favorites.some((fav) => fav.id === product.id);
   }
+getVendedorName(vendedorId?: number): string {
+  if (!vendedorId) return 'Anónimo';
   
+  const vendedor = this.authService.getUserById(vendedorId);
+  return vendedor?.businessName || vendedor?.name || 'Vendedor no registrado';
 }
-
-
-
+}

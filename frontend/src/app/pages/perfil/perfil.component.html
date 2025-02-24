@@ -26,7 +26,7 @@
             <!-- Campos comunes -->
             <div class="mb-3">
               <label>Nombre</label>
-              <input formControlName="nombre" class="form-control">
+              <input formControlName="name" class="form-control">
               <div *ngIf="profileForm.get('nombre')?.invalid" class="text-danger">
                 Nombre es requerido
               </div>
@@ -45,8 +45,8 @@
             <!-- Campos específicos para vendedor -->
             <div *ngIf="rol === 'vendedor'" class="mb-3">
               <label>Nombre del Negocio</label>
-              <input formControlName="negocio" class="form-control">
-              <div *ngIf="profileForm.get('negocio')?.invalid" class="text-danger">
+              <input formControlName="businessName" class="form-control">
+              <div *ngIf="profileForm.get('businessName')?.invalid" class="text-danger">
                 Nombre del negocio es requerido
               </div>
             </div>
@@ -68,7 +68,7 @@
                 <h3 class="text-primary">Perfil de Cliente</h3>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">
-                    <strong>Nombre:</strong> {{ cliente?.nombre }} {{ cliente?.apellido }}
+                    <strong>Nombre:</strong> {{ cliente?.name }}
                   </li>
                   <li class="list-group-item">
                     <strong>Email:</strong> {{ cliente?.email }}
@@ -81,7 +81,7 @@
                 <h3 class="text-success">Perfil de Vendedor</h3>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">
-                    <strong>Nombre del Negocio:</strong> {{ vendedor?.negocio }}
+                    <strong>Nombre del Negocio:</strong> {{ vendedor?.businessName }}
                   </li>
                   <li class="list-group-item">
                     <strong>Email:</strong> {{ vendedor?.email }}

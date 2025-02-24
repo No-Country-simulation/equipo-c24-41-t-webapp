@@ -4,6 +4,6 @@ export interface Product {
   precio: number; // Precio, asegurarse de manejar la conversión si es necesario.
   descripcion: string; // Descripción, debe coincidir con la API.
   imagen?: string; // URL de la imagen del producto, si la API la proporciona.
-  vendedorId?: number;    // Nuevo: para identificar al vendedor
-  publicado?: boolean;    // Nuevo: para productos visibles a clientes
+  vendedorId?: number;    //  para identificar al vendedor
+  publicado?: boolean;    // para productos visibles a clientes
 }

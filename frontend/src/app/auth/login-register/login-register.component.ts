@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 
+
 @Component({
   selector: 'app-login-register',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
@@ -71,36 +72,49 @@ export class LoginRegisterComponent implements OnInit {
   }
 
 
-onSubmit(): void {
-  if (this.authForm.invalid) return;
-
-  this.isLoading.set(true);
-  this.errorMessage.set(null);
-
-  const formData = this.authForm.value;
-
-  if (this.isLogin()) {
-    this.authService.login({
-      email: formData.email,
-      password: formData.password
-    }).subscribe({
-      next: () => this.isLoading.set(false),
-      error: (err) => {
-        this.isLoading.set(false);
-        this.errorMessage.set(err.message);
-      }
-    });
-  } else {
-    const { confirmPassword, ...registerData } = formData;
-    this.authService.register(registerData).subscribe({
-      next: () => this.isLoading.set(false),
-      error: (err) => {
-        this.isLoading.set(false);
-        this.errorMessage.set(err.message);
-      }
-    });
+  onSubmit(): void {
+    if (this.authForm.invalid) return;
+  
+    if (this.isLogin()) {
+      this.authService.login(this.authForm.value.email, this.authForm.value.password)
+        .subscribe({
+          next: (user) => {
+            console.log('Login exitoso', user);
+            const role = user.role; // Obtener el rol
+            if (role === 'cliente') {
+              this.router.navigate(['/cliente']);
+            } else if (role === 'vendedor') {
+              this.router.navigate(['/vendedor']);
+            } else {
+              console.warn('Rol desconocido, redirigiendo a inicio');
+              this.router.navigate(['/']);
+            }
+          },
+          error: (err) => {
+            console.error('Error en login:', err.message);
+            this.errorMessage.set(err.message);
+          }
+        });
+  
+    } else {
+      const { email, password, name, role, businessName } = this.authForm.value;
+      const newUser = { email, password, name, role, businessName };
+      this.authService.register(newUser)
+        .subscribe({
+          next: (user) => {
+            console.log('Registro exitoso', user);
+            // Redirigir después del registro
+            const role = user.role;
+            this.router.navigate([role === 'cliente' ? '/cliente' : '/vendedor']);
+          },
+          error: (err) => {
+            console.error('Error en registro:', err.message);
+            this.errorMessage.set(err.message);
+          }
+        });
+    }
   }
-}
+  
 
   
   // Método para volver a la página de inicio

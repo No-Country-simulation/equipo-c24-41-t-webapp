@@ -5,7 +5,6 @@ import { VendedorComponent } from './pages/vendedor/vendedor.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { LoginRegisterComponent } from './auth/login-register/login-register.component';
 import { ResearchComponent } from './pages/research/research.component';
-import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },

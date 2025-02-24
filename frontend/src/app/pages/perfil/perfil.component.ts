@@ -16,20 +16,21 @@ import { Observable } from 'rxjs';
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
-export class PerfilComponent {
+export class PerfilComponent implements OnInit {
   editMode = false;
   profileForm!: FormGroup;
   rol: string = 'cliente'; // Valor por defecto
 
   cliente: any = {
-    nombre: '',
+    name: '',
     email: ''
-  }
+  };
   
   vendedor: any = {
-    negocio: '',
+    businessName: '',
     email: ''
-  }
+  };
+  
 
   constructor(
     private fb: FormBuilder,
@@ -46,32 +47,32 @@ export class PerfilComponent {
     });
     this.loadUserData();
     this.initForm();
-  
   }
+
   private initForm(): void {
     const currentUser = this.authService.getCurrentUser();
     
     this.profileForm = this.fb.group({
-      nombre: [currentUser?.nombre || '', Validators.required],
-      apellido: [currentUser?.apellido || ''],
+      name: [currentUser?.name || '', Validators.required],
       email: [currentUser?.email || '', [Validators.required, Validators.email]],
       ...(this.rol === 'vendedor' && {
-        negocio: [currentUser?.negocio || '', Validators.required]
+        businessName: [currentUser?.businessName || '', Validators.required]
       })
     });
   }
+  
+
   private loadUserData(): void {
     const user = this.authService.getCurrentUser();
     
     if (this.rol === 'cliente') {
       this.cliente = {
-        nombre: user?.nombre,
-        apellido: user?.apellido,
+        name: user?.name,
         email: user?.email
       };
     } else {
       this.vendedor = {
-        negocio: user?.negocio,
+        businessName: user?.businessName,
         email: user?.email
       };
     }
@@ -91,7 +92,7 @@ export class PerfilComponent {
         this.loadUserData();
         this.toggleEdit();
       },
-      error: (err) => console.error('Error al actualizar:', err)
+      error: (err: any) => console.error('Error al actualizar:', err)
     });
   }
 }
