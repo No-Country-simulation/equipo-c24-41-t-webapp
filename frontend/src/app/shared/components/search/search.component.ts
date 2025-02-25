@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,17 +14,19 @@ import { FormsModule } from '@angular/forms';
 export class SearchComponent {
   private productService = inject(ProductService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   searchQuery = '';
   searchResults: Product[] = [];
 
   performSearch() {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/research'], { 
-        queryParams: { query: this.searchQuery.trim() } 
+      // Navega a la subruta 'research' dentro de la ruta actual
+      this.router.navigate(['research'], { 
+        relativeTo: this.route, // Usa la ruta actual como base
+        queryParams: { query: this.searchQuery.trim() }
       });
     }
   }
-
 
 }

@@ -1,21 +1,10 @@
-<app-header>
-    <app-home-button class="me-3"></app-home-button>
-    <app-perfil-icon></app-perfil-icon>
-</app-header>
- <!-- Barra de búsqueda -->
-    <app-search class="d-block mx-auto my-5 w-50"></app-search>
+
+
 <div class="container mt-4">
-
+  <h3 *ngIf="searchQuery">Resultados para "{{ searchQuery }}"</h3>
+  <h3 *ngIf="!searchQuery">Todos nuestros productos</h3>
   
-    <!-- Resultados -->
-    <h3 *ngIf="searchQuery" class="mt-4">Resultados para "{{ searchQuery }}"</h3> 
-
-    
-    <div *ngIf="searchResults.length === 0" class="alert alert-warning mt-3">
-      No hay productos que coincidan con "{{ searchQuery }}".
-    </div>
-  
-    <div class="row mt-3">
-        <app-products></app-products>
-    </div>
+  <div class="row mt-3">
+    <app-products [products]="searchResults"></app-products>
   </div>
+</div>

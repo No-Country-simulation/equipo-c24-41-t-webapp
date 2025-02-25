@@ -4,73 +4,82 @@ import { CartItem } from '../models/cart.model';
 import { Product } from '../models/product.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartService {
-  // Estado interno del carrito (Actualmente solo maneja datos locales, Se debería sincronizarse con la API)
-  private cartItems: CartItem[] = [];
-
-  // BehaviorSubject para emitir cambios en el carrito (Debería inicializarse con los datos del backend)
-  private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.cartItems);
+  // BehaviorSubject para manejar el estado del carrito
+  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItemsSubject.asObservable();
 
-    // Método para obtener el total de items
-    getTotalItems(): number {
-      return this.cartItems.reduce(
-        (total: number, item: CartItem) => total + item.cantidad, 
-        0
-      );
-    }
+  // Método para obtener el total de items
+  getTotalItems(): number {
+    return this.cartItemsSubject.value.reduce(
+      (total, item) => total + item.cantidad, 
+      0
+    );
+  }
 
   // Método para agregar un producto al carrito
-  addProduct(product: Product, quantity: number = 1): void {
-  const updatedCart = [...this.cartItems];
-  
-  const existingItem = updatedCart.find(item => item.producto.id === product.id);
-    
-  if (existingItem) {
-    existingItem.cantidad += quantity;
-    existingItem.total = existingItem.cantidad * product.precio;
-  } else {
-    updatedCart.push({
-      producto: product,
-      cantidad: quantity,
-      total: product.precio * quantity
-    });
+  addProduct(product: Product): void {
+    const currentItems = [...this.cartItemsSubject.value];
+    const existingItemIndex = currentItems.findIndex(item => item.producto.id === product.id);
+
+    if (existingItemIndex > -1) {
+      // Crear nuevo objeto para mantener inmutabilidad
+      const existingItem = currentItems[existingItemIndex];
+      const updatedItem = {
+        ...existingItem,
+        cantidad: existingItem.cantidad + 1,
+        total: (existingItem.cantidad + 1) * product.precio
+      };
+      currentItems[existingItemIndex] = updatedItem;
+    } else {
+      currentItems.push({
+        producto: product,
+        cantidad: 1,
+        total: product.precio
+      });
+    }
+
+    this.cartItemsSubject.next(currentItems);
   }
-  
-  this.cartItems = updatedCart; // Actualizar array interno
-  this.cartItemsSubject.next(this.cartItems); // Notificar cambios
-}
 
-  // Método para actualizar la cantidad de un producto en el carrito
+  // Método para actualizar la cantidad de un producto
   updateQuantity(productId: number, cantidad: number): void {
-    const index = this.cartItems.findIndex(item => item.producto.id === productId);
-    if (index > -1 && cantidad > 0) {
-      this.cartItems[index].cantidad = cantidad;
-      this.cartItems[index].total = this.cartItems[index].cantidad * this.cartItems[index].producto.precio;
-      this.cartItemsSubject.next(this.cartItems);
+    if (cantidad <= 0) {
+      this.removeProduct(productId);
+      return;
+    }
 
-      // Aca se debe hacer una llamada a la API para actualizar la cantidad en el backend
+    const items = [...this.cartItemsSubject.value];
+    const index = items.findIndex(item => item.producto.id === productId);
+    
+    if (index > -1) {
+      const updatedItem = {
+        ...items[index],
+        cantidad: cantidad,
+        total: cantidad * items[index].producto.precio
+      };
+      items[index] = updatedItem;
+      this.cartItemsSubject.next(items);
     }
   }
 
   // Método para eliminar un producto del carrito
   removeProduct(productId: number): void {
-    this.cartItems = this.cartItems.filter(item => item.producto.id !== productId);
-    this.cartItemsSubject.next(this.cartItems);
-
-    // Aca se debe hacer la solicitud a la API para eliminar el producto del carrito en el backend
+    const updatedItems = this.cartItemsSubject.value.filter(
+      item => item.producto.id !== productId
+    );
+    this.cartItemsSubject.next(updatedItems);
   }
 
-  // Método para calcular el total del carrito (Este cálculo puede hacerse localmente, pero después podría obtenerse de la API)
+  // Método para calcular el total del carrito
   getTotal(): number {
-    return this.cartItems.reduce((total, item) => total + item.total, 0);
+    return this.cartItemsSubject.value.reduce((total, item) => total + item.total, 0);
   }
 
   // Método para vaciar el carrito
   clearCart(): void {
-    this.cartItems = []; // Limpiar array interno
-    this.cartItemsSubject.next(this.cartItems); // Notificar cambios
+    this.cartItemsSubject.next([]);
   }
 }

@@ -9,10 +9,11 @@ import { PerfilIconComponent } from "../../shared/components/perfil-icon/perfil-
 import { SearchComponent } from "../../shared/components/search/search.component";
 import { PublicAdsComponent } from "../../shared/components/public-ads/public-ads.component";
 import { SellButtonComponent } from '../../shared/components/sell-button/sell-button.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-vendedor',
-  imports: [HeaderComponent, FooterComponent, CategoryComponent, PerfilIconComponent, SearchComponent, PublicAdsComponent, SellButtonComponent],
+  imports: [HeaderComponent, FooterComponent, CategoryComponent, PerfilIconComponent, SearchComponent, PublicAdsComponent, SellButtonComponent, RouterOutlet],
   templateUrl: './vendedor.component.html',
   styleUrl: './vendedor.component.css'
 })

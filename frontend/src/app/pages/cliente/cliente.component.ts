@@ -8,16 +8,17 @@ import { PerfilIconComponent } from '../../shared/components/perfil-icon/perfil-
 import { FavsIconComponent } from '../../shared/components/favs-icon/favs-icon.component';
 import { CartComponent } from '../../shared/components/cart/cart.component';
 import { SellButtonComponent } from '../../shared/components/sell-button/sell-button.component';
-import { ProductsComponent } from "../../shared/components/products/products.component";
 import { CartService } from '../../shared/services/cart.service';
 import { Product } from '../../shared/models/product.model';
+import { RouterOutlet } from '@angular/router';
 
 
 
 
 @Component({
   selector: 'app-cliente',
-  imports: [CommonModule, HeaderComponent, CategoryComponent, SearchComponent, FooterComponent, PerfilIconComponent, FavsIconComponent, CartComponent, SellButtonComponent, ProductsComponent],
+  imports: [CommonModule, HeaderComponent, CategoryComponent, SearchComponent, FooterComponent, PerfilIconComponent, FavsIconComponent, CartComponent, SellButtonComponent, RouterOutlet
+  ],
   templateUrl: './cliente.component.html',
   styleUrl: './cliente.component.css'
 })
@@ -25,10 +26,7 @@ export class ClienteComponent {
 
   constructor(private cartService: CartService) {}
 
-  onAgregarProducto(product: Product): void {
-    console.log('Recibido en ClienteComponent:', product);
-    this.cartService.addProduct(product);
-  }
+
 
 
 }

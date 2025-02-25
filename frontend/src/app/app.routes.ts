@@ -7,13 +7,35 @@ import { LoginRegisterComponent } from './auth/login-register/login-register.com
 import { ResearchComponent } from './pages/research/research.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'cliente', component: ClienteComponent,}, 
-    // canActivate: [authGuard('cliente')]
-    { path:'vendedor', component: VendedorComponent,},
-    // canActivate: [authGuard('vendedor')]
-    { path:'perfil/:rol', component: PerfilComponent},
-    { path: 'auth', component: LoginRegisterComponent},
-    { path: 'research', component: ResearchComponent}
-  
+  // canActivate: [authGuard('cliente')]
+  // canActivate: [authGuard('vendedor')]
+  {
+    path: 'perfil/:rol',
+    component: PerfilComponent,
+  },
+  {
+    path: 'auth',
+    component: LoginRegisterComponent,
+  },
+
+  {
+    path: 'home',
+    component: HomeComponent,
+    children: [{ path: 'research', component: ResearchComponent }],
+  },
+  {
+    path: 'cliente',
+    component: ClienteComponent,
+    children: [{ path: 'research', component: ResearchComponent }],
+  },
+  {
+    path: 'vendedor',
+    component: VendedorComponent,
+    children: [{ path: 'research', component: ResearchComponent }],
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'home', // Redirige la raíz a /home
+  },
 ];

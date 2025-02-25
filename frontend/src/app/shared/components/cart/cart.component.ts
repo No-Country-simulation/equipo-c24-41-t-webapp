@@ -25,7 +25,9 @@ export class CartComponent {
     this.cartItems$ = this.cartService.cartItems$;
   }
 
-
+trackByProductId(index: number, item: CartItem): number {
+  return item.producto.id; // Usar el ID como identificador único
+}
 
   incrementar(item: CartItem): void {
     this.cartService.updateQuantity(item.producto.id, item.cantidad + 1);

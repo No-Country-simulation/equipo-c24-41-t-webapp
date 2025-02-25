@@ -7,10 +7,11 @@ import { AutoAdBannerComponent } from '../../shared/components/auto-ad-banner/au
 import { SearchComponent } from '../../shared/components/search/search.component';
 import { AuthButtonComponent } from "../../shared/components/auth-button/auth-button.component";
 import { ProductsComponent } from "../../shared/components/products/products.component";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [FooterComponent, ProductsComponent, AutoAdBannerComponent, CategoryComponent, HeaderComponent, CommonModule, SearchComponent, AuthButtonComponent],
+  imports: [FooterComponent, AutoAdBannerComponent, CategoryComponent, HeaderComponent, CommonModule, SearchComponent, AuthButtonComponent, RouterOutlet],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
