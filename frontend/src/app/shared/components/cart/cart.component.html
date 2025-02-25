@@ -8,21 +8,81 @@
 
 
 <!-- Offcanvas del carrito -->
-<div id="cartOffcanvas" class="offcanvas offcanvas-end show-custom">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Carrito de Compras</h5>
+<div id="cartOffcanvas" class="offcanvas offcanvas-end show-custom" tabindex="-1" aria-labelledby="cartOffcanvasLabel">
+  <div class="offcanvas-header border-bottom">
+    <h3 class="offcanvas-title fw-bold" id="cartOffcanvasLabel">🛒 Tu Carrito</h3>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
-    <div *ngIf="(cartService.cartItems$ | async)?.length; else emptyCart">
-      <div *ngFor="let item of cartService.cartItems$ | async" class="cart-item">
-        <span>{{ item.producto.nombre }} ({{ item.cantidad }})</span>
-        <span>${{ item.total }}</span>
+
+  <div class="offcanvas-body p-0 d-flex flex-column">
+    <!-- Lista de productos (tarjeta dividida en dos columnas) -->
+    <div class="flex-grow-1 overflow-auto p-3">
+      <div *ngIf="(cartService.cartItems$ | async)?.length; else emptyCart">
+        <div *ngFor="let item of cartService.cartItems$ | async" class="mb-3">
+          <div class="card shadow-sm border-0 rounded" style="width: 100%; font-size: 0.85rem;">
+            <div class="row g-0">
+              <!-- Columna de imagen -->
+              <div class="col-4">
+                <div style="height: 150px; overflow: hidden;">
+                  <img *ngIf="item.producto.imagen" [src]="item.producto.imagen" 
+                       style="object-fit: cover; height: 100%; width: 100%;" 
+                       alt="{{ item.producto.nombre }}">
+                </div>
+              </div>
+              <!-- Columna de detalles -->
+              <div class="col-8">
+                <div class="card-body p-2">
+                  <!-- Encabezado con nombre y botón trash a la derecha usando flex -->
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <h6 class="card-title fw-bold text-primary mb-0">{{ item.producto.nombre }}</h6>
+                    <button class="btn btn-link text-danger p-0" (click)="eliminar(item.producto.id)">
+                      <i class="bi bi-trash fs-4"></i>
+                    </button>
+                  </div>
+                  <p class="card-text text-muted small mb-1">
+                    <i class="bi bi-tag me-1"></i>
+                    ${{ item.producto.precio | number }} c/u
+                  </p>
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-outline-secondary py-2 px-3" (click)="decrementar(item)">-</button>
+                      <span class="fw-bold align-self-center">{{ item.cantidad }}</span>
+                      <button class="btn btn-outline-secondary py-2 px-3" (click)="incrementar(item)">+</button>
+                    </div>
+                    <p class="mb-0 fw-semibold text-success">${{ item.total | number }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button class="btn btn-danger w-100 mt-3" (click)="vaciarCarrito()">Vaciar carrito</button>
+
+      <!-- Carrito vacío -->
+      <ng-template #emptyCart>
+        <div class="h-100 d-flex align-items-center justify-content-center">
+          <div class="text-center">
+            <i class="bi bi-cart-x display-4 text-muted mb-3"></i>
+            <p class="text-muted fs-5">Tu carrito está vacío</p>
+          </div>
+        </div>
+      </ng-template>
     </div>
-    <ng-template #emptyCart>
-      <p class="text-center text-muted">El carrito está vacío.</p>
-    </ng-template>
+
+    <!-- Sección fija inferior -->
+    <div class="border-top bg-white p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Total:</h5>
+        <h4 class="fw-bold text-success mb-0">${{ cartService.getTotal() | number }}</h4>
+      </div>
+      <div class="d-grid gap-2">
+        <button class="btn btn-danger py-2" (click)="vaciarCarrito()">
+          <i class="bi bi-x-circle me-2"></i>Vaciar Carrito
+        </button>
+        <button class="btn btn-primary py-2">
+          <i class="bi bi-credit-card me-2"></i>Finalizar Compra
+        </button>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,18 +1,8 @@
 .offcanvas.show-custom {
-  height: 80vh;
-  max-height: 80vh;
+  height: 100vh;
+  max-height: 100vh;
   overflow-y: auto;
 }
-  .offcanvas-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .cart-icon .badge {
-    right: 28% !important;
-    top: 70% !important;
-  }
 
   #cartOffcanvas {
     max-width: 100%;
