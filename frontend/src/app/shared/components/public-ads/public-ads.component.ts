@@ -35,8 +35,7 @@ export class PublicAdsComponent {
       categoria: ['', Validators.required],
       stock: [null, [Validators.min(0)]],
       ubicacion: ['', Validators.maxLength(50)],
-      especificaciones: ['']
-  
+      especificaciones: [''],
     });
   }
 
@@ -45,24 +44,24 @@ export class PublicAdsComponent {
     if (!this.formVisible) this.productForm.reset();
   }
 
-onSubmit() {
-  if (this.productForm.valid) {
-    const currentUser = this.authService.getCurrentUser();
-    console.log('Usuario actual:', currentUser);
-    
-    const newProduct: Product = {
-      ...this.productForm.value,
-      vendedorId: currentUser?.id, 
-      publicado: true, 
-      id: 0,
-      categoria: this.productForm.value.categoria,
-      stock: this.productForm.value.stock || 0,
-      ubicacion: this.productForm.value.ubicacion,
-      especificaciones: this.productForm.value.especificaciones
-    } as Product;
+  onSubmit() {
+    if (this.productForm.valid) {
+      const currentUser = this.authService.getCurrentUser();
+      console.log('Usuario actual:', currentUser);
 
-    this.productService.addProduct(newProduct);
-    this.router.navigate(['/cliente']);
+      const newProduct: Product = {
+        ...this.productForm.value,
+        vendedorId: currentUser?.id,
+        publicado: true,
+        id: 0,
+        categoria: this.productForm.value.categoria,
+        stock: this.productForm.value.stock || 0,
+        ubicacion: this.productForm.value.ubicacion,
+        especificaciones: this.productForm.value.especificaciones,
+      } as Product;
+
+      this.productService.addProduct(newProduct);
+      this.toggleForm();
+    }
   }
-}
 }
