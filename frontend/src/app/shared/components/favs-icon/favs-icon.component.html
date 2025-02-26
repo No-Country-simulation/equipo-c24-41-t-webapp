@@ -38,7 +38,10 @@
       <button class="btn btn-danger w-100 mt-3" (click)="clearFavorites()">Vaciar favoritos</button>
     </div>
     <ng-template #noFavs>
-      <p class="text-center text-muted">No tienes productos favoritos.</p>
+      <div class="h-100 d-flex flex-column align-items-center justify-content-center">
+        <i class="bi bi-heartbreak display-4 text-muted mb-3"></i>
+        <p class="text-center text-muted mb-0">No tienes productos favoritos</p>
+      </div>
     </ng-template>
   </div>
 </div>

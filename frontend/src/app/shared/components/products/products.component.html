@@ -1,6 +1,7 @@
 <div class="row g-1">
   <div class="col-4 col-md-3 col-lg-2" *ngFor="let product of products; trackBy: trackByProductId">
-    <div class="card shadow-sm border-0 rounded text-center" (click)="showProductDetails(product)"
+    <div class="card shadow-sm border-0 rounded text-center"
+      (click)="selectedProductId !== product.id && showProductDetails(product)"
       style="width: 100%; font-size: 0.85rem; cursor: pointer;">
       <div class="ratio ratio-1x1">
         <img *ngIf="product.imagen" [src]="product.imagen" class="card-img-top object-fit-cover"
@@ -20,14 +21,21 @@
           <!-- Contenedor del contador -->
           <div *ngIf="selectedProductId === product.id" class="quantity-controls d-flex align-items-center gap-2">
 
-            <button class="btn btn-sm btn-outline-secondary py-0 px-2"
-              (click)="adjustQuantity(-1); $event.stopPropagation()">
-              -
-            </button>
+            <button 
+            class="btn btn-sm py-0 px-2"
+            [class.btn-outline-secondary]="selectedQuantity > 1"
+            [class.btn-secondary]="selectedQuantity <= 1"
+            [class.text-white]="selectedQuantity <= 1"
+            (click)="adjustQuantity(-1); $event.stopPropagation()"
+            [disabled]="selectedQuantity <= 1"
+          >
+            -
+          </button>
 
             <span class="quantity">{{ selectedQuantity }}</span>
 
-            <button class="btn btn-sm btn-outline-secondary py-0 px-2"
+            <button class="btn btn-sm py-0 px-2" [class.btn-outline-secondary]="selectedQuantity < maxStock"
+              [class.btn-secondary]="selectedQuantity >= maxStock" [disabled]="selectedQuantity >= maxStock"
               (click)="adjustQuantity(1); $event.stopPropagation()">
               +
             </button>

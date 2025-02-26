@@ -25,6 +25,7 @@ declare const window: any;
 })
 export class ProductsComponent {
   // Lista de productos (puede ser estática o provenir de un servicio)
+  maxStock: number = 1;
   favorites: Product[] = [];
   @Input() products: Product[] = [];
   allProducts: Product[] = [];
@@ -87,12 +88,17 @@ export class ProductsComponent {
     event.stopPropagation();
     this.selectedProductId = productId;
     this.selectedQuantity = 1;
+    
+    // Obtener el stock del producto seleccionado
+    const currentProduct = this.products.find(p => p.id === productId);
+    this.maxStock = currentProduct?.stock || 1;
   }
 
-  // Ajustar cantidad
   adjustQuantity(amount: number): void {
-    this.selectedQuantity = Math.max(1, this.selectedQuantity + amount);
+    const newQuantity = this.selectedQuantity + amount;
+    this.selectedQuantity = Math.max(1, Math.min(newQuantity, this.maxStock));
   }
+
 
   // Confirmar adición al carrito
 confirmAddToCart(product: Product): void {

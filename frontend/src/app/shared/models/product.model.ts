@@ -7,7 +7,7 @@ export interface Product {
   vendedorId?: number;    //  para identificar al vendedor
   publicado?: boolean;    // para productos visibles a clientes
   categoria?: string;
-  stock?: number;
+  stock: number;
   ubicacion?: string;
   especificaciones?: string;
 }
