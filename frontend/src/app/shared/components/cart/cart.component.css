@@ -22,3 +22,7 @@
     /* Menos padding */
     color: white;
   }
+
+.bi-cart{
+  cursor: pointer;
+}
