@@ -5,6 +5,7 @@ import { VendedorComponent } from './pages/vendedor/vendedor.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { LoginRegisterComponent } from './auth/login-register/login-register.component';
 import { ResearchComponent } from './pages/research/research.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const routes: Routes = [
   // canActivate: [authGuard('cliente')]
@@ -56,6 +57,10 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home', // Redirige la raíz a /home
+    redirectTo: 'home',
+  },
+  { 
+    path: '**', 
+    component: NotFoundComponent 
   },
 ];
