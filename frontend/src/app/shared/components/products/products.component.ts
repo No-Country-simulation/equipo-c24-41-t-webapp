@@ -50,14 +50,12 @@ export class ProductsComponent {
   }
 
   ngOnInit() {
-    this.productService.dynamicProductsPublic$.subscribe(() => {
-      this.products = this.productService.getAllProducts(); 
-      this.allProducts = this.productService.getAllProducts();
-    });
+
   }
 
-  // Agregar al carrito
-
+  trackByProductId(index: number, product: Product): number {
+    return product.id; // Mejora rendimiento y consistencia
+  }
 
   // Toggle para agregar/quitar de favoritos
   onToggleFav(product: Product): void {

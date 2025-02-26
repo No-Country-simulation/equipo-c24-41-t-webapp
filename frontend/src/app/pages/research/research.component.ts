@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ProductService } from '../../shared/services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../shared/models/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductsComponent } from '../../shared/components/products/products.component';
+import { tap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-research',
@@ -22,13 +24,19 @@ export class ResearchComponent {
   searchQuery = '';
   searchResults: Product[] = [];
 
-  ngOnInit() {
-    this.detectContext();
-    this.route.queryParams.subscribe((params) => {
-      this.searchQuery = params['query'] || '';
-      this.performSearch();
-    });
-  }
+  constructor(private cdr: ChangeDetectorRef) {}
+
+
+
+ngOnInit() {
+  this.detectContext();
+  this.route.queryParams.pipe(
+    tap(() => this.searchResults = []) // Limpiar resultados
+  ).subscribe((params) => {
+    this.searchQuery = (params as any)['query'] || ''; // Cast a any temporal
+    this.performSearch();
+  });
+}
 
   private detectContext() {
     const parentRoute = this.route.parent;
@@ -42,10 +50,13 @@ export class ResearchComponent {
 private performSearch() {
   if (this.searchQuery.trim()) {
     this.productService.searchProducts(this.searchQuery).subscribe({
-      next: (results) => this.searchResults = results 
+      next: (results) => {
+        this.searchResults = [...results];
+        this.cdr.detectChanges(); // Forzar detección de cambios
+      }
     });
   } else {
-    this.searchResults = this.productService.getAllProducts();
+    this.searchResults = [...this.productService.getAllProducts()]; // Nueva referencia
   }
 }
 }
