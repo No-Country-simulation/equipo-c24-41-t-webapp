@@ -14,9 +14,9 @@ export class PerfilIconComponent {
     const currentUrl = this.router.url;
 
     if (currentUrl.includes('cliente')) {
-      this.router.navigate(['/perfil/cliente']);
+      this.router.navigate(['/cliente/perfil']);
     } else if (currentUrl.includes('vendedor')) {
-      this.router.navigate(['/perfil/vendedor']);
+      this.router.navigate(['/vendedor/perfil']);
     } else {
       // En caso de que la URL actual no contenga 'cliente' ni 'vendedor'
       this.router.navigate(['/home']);

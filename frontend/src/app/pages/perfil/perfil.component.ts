@@ -2,17 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HeaderComponent } from "../../core/header/header.component";
-import { CategoryComponent } from "../../core/category/category.component";
-import { SellButtonComponent } from "../../shared/components/sell-button/sell-button.component";
-import { FooterComponent } from "../../core/footer/footer.component";
-import { HomeButtonComponent } from "../../shared/components/home-button/home-button.component";
 import { AuthService } from '../../auth/auth.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-perfil',
-  imports: [CommonModule, HeaderComponent, CategoryComponent, SellButtonComponent, FooterComponent, HomeButtonComponent, ReactiveFormsModule],
+  imports: [
+     CommonModule,
+     ReactiveFormsModule
+    ],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
@@ -42,13 +39,14 @@ export class PerfilComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.rol = params.get('rol') ?? 'cliente';
-    });
-    this.loadUserData();
+    // Recupera el rol desde la data de la ruta (definido en las rutas como { data: { rol: 'cliente' } } o 'vendedor')
+    this.rol = this.route.snapshot.data['rol'] || 'cliente';
+  
+    // Inicializa el formulario y carga los datos del usuario en base al rol obtenido
     this.initForm();
+    this.loadUserData();
   }
-
+  
   private initForm(): void {
     const currentUser = this.authService.getCurrentUser();
     

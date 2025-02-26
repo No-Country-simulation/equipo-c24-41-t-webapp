@@ -10,10 +10,6 @@ export const routes: Routes = [
   // canActivate: [authGuard('cliente')]
   // canActivate: [authGuard('vendedor')]
   {
-    path: 'perfil/:rol',
-    component: PerfilComponent,
-  },
-  {
     path: 'auth',
     component: LoginRegisterComponent,
   },
@@ -26,12 +22,36 @@ export const routes: Routes = [
   {
     path: 'cliente',
     component: ClienteComponent,
-    children: [{ path: 'research', component: ResearchComponent }],
+    children: [
+      {
+        path: 'research',
+        component: ResearchComponent,
+      },
+      {
+        path: 'perfil',
+        component: PerfilComponent,
+        data: {
+          rol: 'cliente',
+        },
+      },
+    ],
   },
   {
     path: 'vendedor',
     component: VendedorComponent,
-    children: [{ path: 'research', component: ResearchComponent }],
+    children: [
+      {
+        path: 'research',
+        component: ResearchComponent,
+      },
+      {
+        path: 'perfil',
+        component: PerfilComponent,
+        data: {
+          rol: 'vendedor',
+        },
+      },
+    ],
   },
   {
     path: '',
