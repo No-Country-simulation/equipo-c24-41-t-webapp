@@ -35,17 +35,19 @@ export class CartService {
 
   // Método para actualizar la cantidad de un producto
   updateQuantity(productId: number, newQuantity: number): void {
-    const product = this.productService.getProductById(productId);
-    if (!product) return;
+    const producto = this.productService.getProductById(productId);
+    if (!producto) return;
   
-    // Aplica límites (1 <= cantidad <= stock)
-    newQuantity = Math.max(1, Math.min(newQuantity, product.stock));
+    newQuantity = Math.min(newQuantity, producto.stock);
+    newQuantity = Math.max(newQuantity, 1);
   
-    // Actualiza el carrito
-    const updatedItems = this.cartItemsSubject.value.map(item => 
-      item.producto.id === productId ? { ...item, cantidad: newQuantity } : item
+    const updatedItems = this.cartItemsSubject.value.map((item) => 
+      item.producto.id === productId 
+        ? { ...item, cantidad: newQuantity, total: producto.precio * newQuantity } 
+        : item
     );
-    this.cartItemsSubject.next(updatedItems);
+  
+    this.cartItemsSubject.next(updatedItems); // Notifica a los suscriptores
   }
   // Método para eliminar un producto del carrito
   removeProduct(productId: number): void {
@@ -57,7 +59,10 @@ export class CartService {
 
   // Método para calcular el total del carrito
   getTotal(): number {
-    return this.cartItemsSubject.value.reduce((total, item) => total + item.total, 0);
+    return this.cartItemsSubject.value.reduce(
+      (total, item) => total + (item.producto.precio * item.cantidad), 
+      0
+    );
   }
 
   // Método para vaciar el carrito

@@ -1,81 +1,77 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-perfil',
-  imports: [
-     CommonModule,
-     ReactiveFormsModule
-    ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.css'
+  styleUrl: './perfil.component.css',
 })
 export class PerfilComponent implements OnInit {
   editMode = false;
   profileForm!: FormGroup;
-  rol: string = 'cliente'; // Valor por defecto
+  rol: string = 'cliente';
+  currentUser: User | null = null;
 
   cliente: any = {
     name: '',
-    email: ''
+    email: '',
   };
-  
+
   vendedor: any = {
     businessName: '',
-    email: ''
+    email: '',
   };
-  
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService
-  ) {}
-
-  
+  constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    // Recupera el rol desde la data de la ruta (definido en las rutas como { data: { rol: 'cliente' } } o 'vendedor')
     this.rol = this.route.snapshot.data['rol'] || 'cliente';
-  
-    // Inicializa el formulario y carga los datos del usuario en base al rol obtenido
+    this.currentUser = this.authService.getCurrentUser();
     this.initForm();
-    this.loadUserData();
   }
-  
+
   private initForm(): void {
-    const currentUser = this.authService.getCurrentUser();
-    
     this.profileForm = this.fb.group({
-      name: [currentUser?.name || '', Validators.required],
-      email: [currentUser?.email || '', [Validators.required, Validators.email]],
-      ...(this.rol === 'vendedor' && {
-        businessName: [currentUser?.businessName || '', Validators.required]
-      })
+      name: [this.currentUser?.name || '', Validators.required],
+      email: [
+        this.currentUser?.email || '',
+        [Validators.required, Validators.email],
+      ],
+      businessName: [
+        this.currentUser?.businessName || '',
+        this.rol === 'vendedor' ? Validators.required : null,
+      ],
     });
   }
-  
 
   private loadUserData(): void {
     const user = this.authService.getCurrentUser();
-    
+
     if (this.rol === 'cliente') {
       this.cliente = {
         name: user?.name,
-        email: user?.email
+        email: user?.email,
       };
     } else {
       this.vendedor = {
         businessName: user?.businessName,
-        email: user?.email
+        email: user?.email,
       };
     }
   }
-  
+
   toggleEdit(): void {
     this.editMode = !this.editMode;
     if (!this.editMode) this.initForm();
@@ -84,14 +80,18 @@ export class PerfilComponent implements OnInit {
   onSubmit(): void {
     if (this.profileForm.invalid) return;
     
-    const updatedData = this.profileForm.value;
+    const updatedData: User = {
+      ...this.currentUser,
+      ...this.profileForm.value,
+      role: this.rol // Forzar el rol actual
+    };
+
     this.authService.updateUserProfile(updatedData).subscribe({
       next: () => {
-        this.loadUserData();
-        this.toggleEdit();
+        this.currentUser = updatedData;
+        this.editMode = false;
       },
-      error: (err: any) => console.error('Error al actualizar:', err)
+      error: (err) => console.error('Error al actualizar:', err)
     });
   }
 }
-

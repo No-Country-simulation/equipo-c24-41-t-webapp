@@ -60,14 +60,18 @@ export class AuthService {
   }
 
   updateUserProfile(updatedUser: User): Observable<User> {
-    const index = this.users.findIndex(u => u.email === updatedUser.email);
+    const index = this.users.findIndex(u => u.id === updatedUser.id); // Buscar por ID
     if (index !== -1) {
-      this.users[index] = updatedUser;
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-      return of(updatedUser);
-    } else {
-      return throwError(() => new Error('Usuario no encontrado'));
+      // Preservar campos existentes y actualizar solo los modificados
+      this.users[index] = { 
+        ...this.users[index],
+        ...updatedUser,
+        id: this.users[index].id // Mantener ID original
+      };
+      localStorage.setItem('currentUser', JSON.stringify(this.users[index]));
+      return of(this.users[index]);
     }
+    return throwError(() => new Error('Usuario no encontrado'));
   }
   getUserById(id: number): User | undefined {
     return this.users.find(u => u.id === id);
