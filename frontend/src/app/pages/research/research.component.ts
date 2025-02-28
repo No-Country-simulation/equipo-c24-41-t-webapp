@@ -18,6 +18,7 @@ declare global {
 
 @Component({
   selector: 'app-research',
+  standalone: true,
   imports: [CommonModule, FormsModule, ProductsComponent],
   templateUrl: './research.component.html',
   styleUrl: './research.component.css',
@@ -25,7 +26,10 @@ declare global {
 export class ResearchComponent {
   searchQuery: string = '';
   products: Product[] = [];
+<<<<<<< HEAD
   filteredProducts: Product[] = [];
+=======
+>>>>>>> cce4eba (Actualizar componente de research; agregar lógica para manejar productos favoritos, selección de cantidad y detalles del producto, y optimizar la visualización de productos.)
   favorites: Product[] = [];
   isAuthenticated: boolean = false;
   maxStock: number = 1;
@@ -38,6 +42,7 @@ export class ResearchComponent {
     private authService: AuthService,
     private favService: FavService,
     private productService: ProductService,
+<<<<<<< HEAD
     private cartService: CartService, 
     private router: Router,
     private route: ActivatedRoute,
@@ -49,6 +54,16 @@ export class ResearchComponent {
       this.isAuthenticated = !!user;
     });
 
+=======
+    private cartService: CartService
+  ) {
+    this.products = this.productService.getAllProducts();
+    this.favService.favsItems$.subscribe((favs) => (this.favorites = favs));
+    this.authService.currentUser$.subscribe((user) => {
+      this.isAuthenticated = !!user;
+    });
+
+>>>>>>> cce4eba (Actualizar componente de research; agregar lógica para manejar productos favoritos, selección de cantidad y detalles del producto, y optimizar la visualización de productos.)
     this.products.forEach((product) => {
       if (product.vendedorId) {
         const vendedor = this.authService.getUserById(product.vendedorId);
@@ -57,6 +72,7 @@ export class ResearchComponent {
       }
     });
   }
+<<<<<<< HEAD
   performSearch() {
     if (this.searchQuery.trim()) {
       this.router.navigate([], { 
@@ -91,6 +107,8 @@ export class ResearchComponent {
         product.descripcion?.toLowerCase().includes(query)
       );
     }
+=======
+>>>>>>> cce4eba (Actualizar componente de research; agregar lógica para manejar productos favoritos, selección de cantidad y detalles del producto, y optimizar la visualización de productos.)
 
   // Métodos manejados ahora en el padre
   onToggleFav(product: Product): void {
