@@ -1,15 +1,12 @@
 <div class="input-group w-100">
-    <input 
-      class="form-control form-control-lg" 
-      placeholder="Busca Cerámica" 
-      type="text"
-      [(ngModel)]="searchQuery"
-      (keyup.enter)="performSearch()"
-    >
-    <span 
-      class="input-group-text search"
-      (click)="performSearch()"
-    >
-      <i class="fas fa-search"></i>
-    </span>
-  </div>
+  <input
+    class="form-control form-control-lg"
+    placeholder="Busca Cerámica"
+    type="text"
+    [(ngModel)]="searchQuery"
+    (keyup.enter)="performSearch()"
+  />
+  <span class="input-group-text search" (click)="performSearch()">
+    <i class="fas fa-search"></i>
+  </span>
+</div>

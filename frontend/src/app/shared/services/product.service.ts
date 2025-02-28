@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
 
+
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   // Productos estáticos iniciales (Estos productos deben ser reemplazados por datos de la API)
@@ -847,19 +848,19 @@ export class ProductService {
   searchProducts(query: string): Observable<Product[]> {
     const normalizedQuery = this.normalizeText(query);
     const allProducts = this.getAllProducts();
-
-    const filtered = allProducts.filter((product) => {
-      const nombre = this.normalizeText(product.nombre || '');
-      const descripcion = this.normalizeText(product.descripcion || '');
-      const categoria = this.normalizeText(product.categoria || '');
-
-      return (
-        nombre.includes(normalizedQuery) ||
-        descripcion.includes(normalizedQuery) ||
-        categoria.includes(normalizedQuery)
+  
+    const filtered = allProducts.filter(product => {
+      const fieldsToSearch = [
+        product.nombre || '', // Manejar posibles undefined
+        product.descripcion || '',
+        product.categoria || ''
+      ];
+  
+      return fieldsToSearch.some(field => 
+        this.normalizeText(field).includes(normalizedQuery)
       );
     });
-
+  
     return of(filtered);
   }
   getProductById(id: number): Product | undefined {

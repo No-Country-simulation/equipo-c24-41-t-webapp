@@ -1,14 +1,22 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+
+import { tap } from 'rxjs/operators';
 import { ProductService } from '../../shared/services/product.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Product } from '../../shared/models/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductsComponent } from '../../shared/components/products/products.component';
-import { tap } from 'rxjs/operators';
 import { AuthService } from '../../auth/auth.service';
 import { FavService } from '../../shared/services/fav.service';
 import { CartService } from '../../shared/services/cart.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 declare global {
   interface Window {
@@ -23,9 +31,13 @@ declare global {
   templateUrl: './research.component.html',
   styleUrl: './research.component.css',
 })
-export class ResearchComponent {
+export class ResearchComponent implements OnInit, OnDestroy {
+  private queryParamsSubscription!: Subscription;
   searchQuery: string = '';
   products: Product[] = [];
+  filteredProducts: Product[] = [];
+  private querySub!: Subscription; 
+
   favorites: Product[] = [];
   isAuthenticated: boolean = false;
   maxStock: number = 1;
@@ -38,9 +50,12 @@ export class ResearchComponent {
     private authService: AuthService,
     private favService: FavService,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.products = this.productService.getAllProducts();
+    this.filteredProducts = this.products;
     this.favService.favsItems$.subscribe((favs) => (this.favorites = favs));
     this.authService.currentUser$.subscribe((user) => {
       this.isAuthenticated = !!user;
@@ -55,8 +70,48 @@ export class ResearchComponent {
     });
   }
 
-  // Métodos manejados ahora en el padre
+  ngOnInit() {
+    this.querySub = this.route.queryParams.pipe(
+      tap((params: Params) => { // Especificar tipo Params
+        this.searchQuery = params['query'] || '';
+        this.executeSearch(this.searchQuery);
+      })
+    ).subscribe();
+  }
+
+  private executeSearch(query: string): void {
+    if (query) {
+      this.productService.searchProducts(query).subscribe(results => {
+        this.filteredProducts = results;
+      });
+    } else {
+      this.filteredProducts = this.productService.getAllProducts();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.querySub) {
+      this.querySub.unsubscribe();
+    }
+  }
+
+  // Método para filtrar productos
+  private filterProducts(): void {
+    if (!this.searchQuery) {
+      this.filteredProducts = [...this.products];
+    } else {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredProducts = this.products.filter(
+        (product) =>
+          product.nombre.toLowerCase().includes(query) ||
+          product.descripcion?.toLowerCase().includes(query)
+      );
+    }
+  }
+
   onToggleFav(product: Product): void {
+    this.filterProducts(); // Call filterProducts to update filteredProducts
+
     this.favService.toggleFav(product);
   }
 

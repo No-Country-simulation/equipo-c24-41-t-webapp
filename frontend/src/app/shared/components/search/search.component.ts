@@ -18,15 +18,26 @@ export class SearchComponent {
 
   searchQuery = '';
   searchResults: Product[] = [];
+  filteredProducts: Product[] = [];
 
-  performSearch() {
-    if (this.searchQuery.trim()) {
-      // Navega a la subruta 'research' dentro de la ruta actual
-      this.router.navigate(['research'], { 
-        relativeTo: this.route, // Usa la ruta actual como base
-        queryParams: { query: this.searchQuery.trim() }
-      });
+
+  filterProducts(products: Product[]) {
+    if (this.searchQuery) {
+      this.filteredProducts = products.filter(product =>
+        product.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredProducts = products;
     }
   }
+
+  performSearch(): void {
+    const query = this.searchQuery.trim();
+    this.router.navigate(['/dashboard/research'], {
+      queryParams: { query: query || null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
 
 }

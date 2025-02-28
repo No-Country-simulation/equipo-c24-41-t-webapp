@@ -48,10 +48,16 @@
           <button *ngIf="isAuthenticated" (click)="toggleFav.emit(product); $event.stopPropagation()"
             [ngClass]="{'btn-danger': isFavorite(product), 'btn-outline-secondary': !isFavorite(product)}"
             class="btn btn-sm p-1">
-            <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i> Favoritos
+            <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i> {{
+            isFavorite(product) ? '❤️ Quitar' : '🤍 Favorito' }}
+
           </button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="products.length === 0" class="alert alert-warning">
+  No se encontraron productos
 </div>
