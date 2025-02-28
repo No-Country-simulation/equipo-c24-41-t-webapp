@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { User } from '../shared/models/user.model';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   // Usuarios predefinidos
@@ -15,66 +14,96 @@ export class AuthService {
       password: '1234',
       name: 'Admin',
       role: 'vendedor',
-      businessName: 'Negocio Admin'
+      businessName: 'Negocio Admin',
     },
     {
       id: 2,
       email: 'user@ejemplo.com',
       password: 'abcd',
       name: 'Usuario',
-      role: 'cliente'
-    }
+      role: 'cliente',
+    },
   ];
+
+  // Inicializa el BehaviorSubject con el usuario guardado en localStorage (si existe)
+  private currentUserSubject = new BehaviorSubject<User | null>(
+    this.getUserFromLocalStorage()
+  );
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  // Obtiene el usuario desde localStorage
+  private getUserFromLocalStorage(): User | null {
+    const storedUser = localStorage.getItem('currentUser');
+    return storedUser ? JSON.parse(storedUser) : null;
+  }
+
+  getCurrentUser(): Observable<User | null> {
+    return this.currentUser$;
+  }
 
   // Método para validar el login
   login(email: string, password: string): Observable<User> {
-    const user = this.users.find(u => u.email === email && u.password === password);
+    const user = this.users.find(
+      (u) => u.email === email && u.password === password
+    );
     if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user)); // Guardar usuario en localStorage
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      this.currentUserSubject.next(user); // Actualiza el usuario actual
       return of(user);
     } else {
       return throwError(() => new Error('Credenciales incorrectas'));
     }
   }
-  
 
+  // Método para registrar un nuevo usuario
   register(newUser: User): Observable<User> {
-    // Verificar si el usuario ya existe
-    const exists = this.users.some(u => u.email === newUser.email);
+    const exists = this.users.some((u) => u.email === newUser.email);
     if (exists) {
       return throwError(() => new Error('El email ya está registrado'));
     } else {
-      // Agregar el nuevo usuario a la "base de datos" en memoria
       this.users.push(newUser);
       localStorage.setItem('currentUser', JSON.stringify(newUser));
+      this.currentUserSubject.next(newUser); // Actualiza el usuario actual
       return of(newUser);
     }
   }
 
+  // Método para cerrar sesión
   logout(): void {
     localStorage.removeItem('currentUser');
-  }
-  getCurrentUser(): User | null {
-    const userData = localStorage.getItem('currentUser');
-    return userData ? JSON.parse(userData) : null;
+    this.currentUserSubject.next(null);
   }
 
+  // Actualiza el perfil del usuario y lo guarda en localStorage
   updateUserProfile(updatedUser: User): Observable<User> {
-    const index = this.users.findIndex(u => u.id === updatedUser.id); // Buscar por ID
+    const index = this.users.findIndex((u) => u.id === updatedUser.id);
     if (index !== -1) {
-      // Preservar campos existentes y actualizar solo los modificados
-      this.users[index] = { 
+      this.users[index] = {
         ...this.users[index],
         ...updatedUser,
-        id: this.users[index].id // Mantener ID original
+        id: this.users[index].id, // Mantiene el ID original
       };
       localStorage.setItem('currentUser', JSON.stringify(this.users[index]));
+      this.currentUserSubject.next(this.users[index]); // Actualiza el usuario actual
       return of(this.users[index]);
     }
     return throwError(() => new Error('Usuario no encontrado'));
   }
+
+  // Método para actualizar el usuario actual (por ejemplo, cambiar el rol)
+  updateCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  // Busca un usuario por su ID
   getUserById(id: number): User | undefined {
-    return this.users.find(u => u.id === id);
+    return this.users.find((u) => u.id === id);
+  }
+
+  // Método para verificar si hay un usuario logueado
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('currentUser');
   }
   
 }

@@ -4,7 +4,6 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 
-
 @Component({
   selector: 'app-login-register',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
@@ -17,12 +16,10 @@ export class LoginRegisterComponent implements OnInit {
   isLoading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
 
-
-
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +56,7 @@ export class LoginRegisterComponent implements OnInit {
       ? null : { mismatch: true };
   }
 
-  // Método que maneja el cambio de rol
+  // Método que maneja el cambio de rol en el registro
   onRoleChange(event: any): void {
     const role = event.target.value;
     if (role === 'vendedor') {
@@ -71,31 +68,22 @@ export class LoginRegisterComponent implements OnInit {
     }
   }
 
-
   onSubmit(): void {
     if (this.authForm.invalid) return;
-  
+
     if (this.isLogin()) {
       this.authService.login(this.authForm.value.email, this.authForm.value.password)
         .subscribe({
           next: (user) => {
             console.log('Login exitoso', user);
-            const role = user.role; // Obtener el rol
-            if (role === 'cliente') {
-              this.router.navigate(['/cliente']);
-            } else if (role === 'vendedor') {
-              this.router.navigate(['/vendedor']);
-            } else {
-              console.warn('Rol desconocido, redirigiendo a inicio');
-              this.router.navigate(['/']);
-            }
+            // Redirige a dashboard, que se encarga de mostrar la vista según el rol
+            this.router.navigate(['/dashboard']);
           },
           error: (err) => {
             console.error('Error en login:', err.message);
             this.errorMessage.set(err.message);
           }
         });
-  
     } else {
       const { email, password, name, role, businessName } = this.authForm.value;
       const newUser = { email, password, name, role, businessName };
@@ -103,9 +91,8 @@ export class LoginRegisterComponent implements OnInit {
         .subscribe({
           next: (user) => {
             console.log('Registro exitoso', user);
-            // Redirigir después del registro
-            const role = user.role;
-            this.router.navigate([role === 'cliente' ? '/cliente' : '/vendedor']);
+            // Redirige a dashboard, que se encarga de mostrar la vista según el rol
+            this.router.navigate(['/dashboard']);
           },
           error: (err) => {
             console.error('Error en registro:', err.message);
@@ -114,9 +101,7 @@ export class LoginRegisterComponent implements OnInit {
         });
     }
   }
-  
 
-  
   // Método para volver a la página de inicio
   goHome(): void {
     this.router.navigate(['/']);

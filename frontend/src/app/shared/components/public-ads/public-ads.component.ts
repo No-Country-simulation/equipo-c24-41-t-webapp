@@ -46,22 +46,26 @@ export class PublicAdsComponent {
 
   onSubmit() {
     if (this.productForm.valid) {
-      const currentUser = this.authService.getCurrentUser();
-      console.log('Usuario actual:', currentUser);
-
-      const newProduct: Product = {
-        ...this.productForm.value,
-        vendedorId: currentUser?.id,
-        publicado: true,
-        id: 0,
-        categoria: this.productForm.value.categoria,
-        stock: this.productForm.value.stock || 0,
-        ubicacion: this.productForm.value.ubicacion,
-        especificaciones: this.productForm.value.especificaciones,
-      } as Product;
-
-      this.productService.addProduct(newProduct);
-      this.toggleForm();
+      this.authService.currentUser$.subscribe((currentUser) => {
+        if (currentUser) {
+          console.log('Usuario actual:', currentUser);
+  
+          const newProduct: Product = {
+            ...this.productForm.value,
+            vendedorId: currentUser.id,
+            publicado: true,
+            id: 0,
+            categoria: this.productForm.value.categoria,
+            stock: this.productForm.value.stock || 0,
+            ubicacion: this.productForm.value.ubicacion,
+            especificaciones: this.productForm.value.especificaciones,
+          } as Product;
+  
+          this.productService.addProduct(newProduct);
+          this.toggleForm();
+        }
+      });
     }
   }
+  
 }

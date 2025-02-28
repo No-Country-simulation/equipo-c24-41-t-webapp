@@ -21,16 +21,11 @@
           <!-- Contenedor del contador -->
           <div *ngIf="selectedProductId === product.id" class="quantity-controls d-flex align-items-center gap-2">
 
-            <button 
-            class="btn btn-sm py-0 px-2"
-            [class.btn-outline-secondary]="selectedQuantity > 1"
-            [class.btn-secondary]="selectedQuantity <= 1"
-            [class.text-white]="selectedQuantity <= 1"
-            (click)="adjustQuantity(-1); $event.stopPropagation()"
-            [disabled]="selectedQuantity <= 1"
-          >
-            -
-          </button>
+            <button class="btn btn-sm py-0 px-2" [class.btn-outline-secondary]="selectedQuantity > 1"
+              [class.btn-secondary]="selectedQuantity <= 1" [class.text-white]="selectedQuantity <= 1"
+              (click)="adjustQuantity(-1); $event.stopPropagation()" [disabled]="selectedQuantity <= 1">
+              -
+            </button>
 
             <span class="quantity">{{ selectedQuantity }}</span>
 
@@ -49,17 +44,15 @@
           </div>
 
           <!-- Botón añadir -->
-          <button *ngIf="selectedProductId !== product.id" (click)="showQuantitySelector(product.id, $event)"
-            class="btn btn-sm btn-primary p-1">
-            <i class="bi bi-cart-plus"></i>
-            Añadir
+          <button *ngIf="isAuthenticated && selectedProductId !== product.id"
+            (click)="showQuantitySelector(product.id, $event)" class="btn btn-sm btn-primary p-1">
+            <i class="bi bi-cart-plus"></i> Añadir
           </button>
-          <!-- boton favoritos -->
-          <button (click)="onToggleFav(product) ; $event.stopPropagation()"
+          <!-- Botón favoritos -->
+          <button *ngIf="isAuthenticated" (click)="onToggleFav(product); $event.stopPropagation()"
             [ngClass]="{'btn-danger': isFavorite(product), 'btn-outline-secondary': !isFavorite(product)}"
             class="btn btn-sm p-1">
-            <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i>
-            Favoritos
+            <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i> Favoritos
           </button>
         </div>
       </div>

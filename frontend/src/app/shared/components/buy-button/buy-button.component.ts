@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
 import { User } from '../../models/user.model';
 import { take } from 'rxjs/operators';
-
 @Component({
-  selector: 'app-sell-button',
+  selector: 'app-buy-button',
   imports: [],
-  templateUrl: './sell-button.component.html',
-  styleUrl: './sell-button.component.css'
+  templateUrl: './buy-button.component.html',
+  styleUrl: './buy-button.component.css'
 })
-export class SellButtonComponent implements OnInit {
+export class BuyButtonComponent implements OnInit {
 
   constructor(
     private router: Router,

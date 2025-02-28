@@ -1,0 +1,48 @@
+<!-- dashboard.component.html -->
+<app-header>
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <!-- Búsqueda para vendedores -->
+        <app-search *ngIf="isVendedor" class="ms-4 me-4"></app-search>
+
+        <!-- Contenedor íconos derecho -->
+        <div class="d-flex align-items-center gap-3">
+            <!-- Elementos comunes -->
+            <app-perfil-icon></app-perfil-icon>
+
+            <!-- Elementos condicionales -->
+            <div class="d-flex gap-3">
+                <!-- Para Clientes -->
+                <ng-container *ngIf="!isVendedor">
+                    <app-cart></app-cart>
+                    <app-favs-icon></app-favs-icon>
+                </ng-container>
+
+                <!-- Para Vendedores -->
+                <app-sell-button></app-sell-button>
+                <!-- Para Compradores -->
+                <app-buy-button></app-buy-button>
+                <app-logout-button></app-logout-button>
+            </div>
+        </div>
+    </div>
+</app-header>
+
+<!-- Categorías (común) -->
+<app-category></app-category>
+
+<!-- Contenido dinámico -->
+<ng-container *ngIf="isVendedor; else clienteContent">
+    <!-- Sección Vendedor -->
+    <app-public-ads></app-public-ads>
+</ng-container>
+
+<ng-template #clienteContent>
+    <!-- Sección Cliente -->
+    <app-search class="d-block mx-auto my-5 w-50"></app-search>
+</ng-template>
+
+<!-- Router outlet común -->
+<router-outlet></router-outlet>
+
+<!-- Footer común -->
+<app-footer></app-footer>

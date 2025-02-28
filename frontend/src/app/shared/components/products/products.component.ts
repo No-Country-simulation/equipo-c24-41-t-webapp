@@ -2,9 +2,7 @@ import {
   ViewChild,
   ElementRef,
   Component,
-  EventEmitter,
   Input,
-  Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +22,7 @@ declare const window: any;
   styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent {
+  isAuthenticated: boolean = false;
   // Lista de productos (puede ser estática o provenir de un servicio)
   maxStock: number = 1;
   favorites: Product[] = [];
@@ -51,7 +50,9 @@ export class ProductsComponent {
   }
 
   ngOnInit() {
-
+    this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
+    });
   }
 
   trackByProductId(index: number, product: Product): number {

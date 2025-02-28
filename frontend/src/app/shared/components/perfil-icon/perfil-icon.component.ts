@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../../auth/auth.service';
+AuthService
 @Component({
   selector: 'app-perfil-icon',
   imports: [],
@@ -11,15 +12,7 @@ export class PerfilIconComponent {
   constructor(private router: Router) {}
 
   goToProfile(): void {
-    const currentUrl = this.router.url;
-
-    if (currentUrl.includes('cliente')) {
-      this.router.navigate(['/cliente/perfil']);
-    } else if (currentUrl.includes('vendedor')) {
-      this.router.navigate(['/vendedor/perfil']);
-    } else {
-      // En caso de que la URL actual no contenga 'cliente' ni 'vendedor'
-      this.router.navigate(['/home']);
-    }
+    // Redirige al perfil dentro del dashboard
+    this.router.navigate(['/dashboard/perfil']);
   }
 }
