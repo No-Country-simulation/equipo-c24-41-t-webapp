@@ -26,10 +26,6 @@ declare global {
 export class ResearchComponent {
   searchQuery: string = '';
   products: Product[] = [];
-<<<<<<< HEAD
-  filteredProducts: Product[] = [];
-=======
->>>>>>> cce4eba (Actualizar componente de research; agregar lógica para manejar productos favoritos, selección de cantidad y detalles del producto, y optimizar la visualización de productos.)
   favorites: Product[] = [];
   isAuthenticated: boolean = false;
   maxStock: number = 1;
@@ -42,19 +38,6 @@ export class ResearchComponent {
     private authService: AuthService,
     private favService: FavService,
     private productService: ProductService,
-<<<<<<< HEAD
-    private cartService: CartService, 
-    private router: Router,
-    private route: ActivatedRoute,
-
-  ) {
-    this.products = this.productService.getAllProducts();
-    this.favService.favsItems$.subscribe((favs) => (this.favorites = favs));
-    this.authService.currentUser$.subscribe((user) => {
-      this.isAuthenticated = !!user;
-    });
-
-=======
     private cartService: CartService
   ) {
     this.products = this.productService.getAllProducts();
@@ -63,7 +46,6 @@ export class ResearchComponent {
       this.isAuthenticated = !!user;
     });
 
->>>>>>> cce4eba (Actualizar componente de research; agregar lógica para manejar productos favoritos, selección de cantidad y detalles del producto, y optimizar la visualización de productos.)
     this.products.forEach((product) => {
       if (product.vendedorId) {
         const vendedor = this.authService.getUserById(product.vendedorId);
@@ -72,43 +54,6 @@ export class ResearchComponent {
       }
     });
   }
-<<<<<<< HEAD
-  performSearch() {
-    if (this.searchQuery.trim()) {
-      this.router.navigate([], { 
-        relativeTo: this.route,
-        queryParams: { query: this.searchQuery.trim() },
-        queryParamsHandling: 'merge' // Mantener otros parámetros si existen
-      });
-    }
-  }
-
-  ngOnInit() {
-    // Obtener productos
-    this.products = this.productService.getAllProducts();
-    this.filteredProducts = this.products;
-
-    // Escuchar cambios en los parámetros de la URL
-    this.route.queryParams.subscribe(params => {
-      this.searchQuery = params['query'] || '';
-      this.filterProducts();
-    });
-  }
-    // Filtrar productos según el término de búsqueda
-    private filterProducts(): void {
-      if (!this.searchQuery) {
-        this.filteredProducts = this.products;
-        return;
-      }
-  
-      const query = this.searchQuery.toLowerCase();
-      this.filteredProducts = this.products.filter(product => 
-        product.nombre.toLowerCase().includes(query) || 
-        product.descripcion?.toLowerCase().includes(query)
-      );
-    }
-=======
->>>>>>> cce4eba (Actualizar componente de research; agregar lógica para manejar productos favoritos, selección de cantidad y detalles del producto, y optimizar la visualización de productos.)
 
   // Métodos manejados ahora en el padre
   onToggleFav(product: Product): void {
