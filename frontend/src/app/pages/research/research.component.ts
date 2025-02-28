@@ -18,7 +18,6 @@ declare global {
 
 @Component({
   selector: 'app-research',
-  standalone: true,
   imports: [CommonModule, FormsModule, ProductsComponent],
   templateUrl: './research.component.html',
   styleUrl: './research.component.css',
@@ -26,6 +25,7 @@ declare global {
 export class ResearchComponent {
   searchQuery: string = '';
   products: Product[] = [];
+  filteredProducts: Product[] = [];
   favorites: Product[] = [];
   isAuthenticated: boolean = false;
   maxStock: number = 1;
@@ -38,7 +38,10 @@ export class ResearchComponent {
     private authService: AuthService,
     private favService: FavService,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService, 
+    private router: Router,
+    private route: ActivatedRoute,
+
   ) {
     this.products = this.productService.getAllProducts();
     this.favService.favsItems$.subscribe((favs) => (this.favorites = favs));
@@ -54,6 +57,40 @@ export class ResearchComponent {
       }
     });
   }
+  performSearch() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate([], { 
+        relativeTo: this.route,
+        queryParams: { query: this.searchQuery.trim() },
+        queryParamsHandling: 'merge' // Mantener otros parámetros si existen
+      });
+    }
+  }
+
+  ngOnInit() {
+    // Obtener productos
+    this.products = this.productService.getAllProducts();
+    this.filteredProducts = this.products;
+
+    // Escuchar cambios en los parámetros de la URL
+    this.route.queryParams.subscribe(params => {
+      this.searchQuery = params['query'] || '';
+      this.filterProducts();
+    });
+  }
+    // Filtrar productos según el término de búsqueda
+    private filterProducts(): void {
+      if (!this.searchQuery) {
+        this.filteredProducts = this.products;
+        return;
+      }
+  
+      const query = this.searchQuery.toLowerCase();
+      this.filteredProducts = this.products.filter(product => 
+        product.nombre.toLowerCase().includes(query) || 
+        product.descripcion?.toLowerCase().includes(query)
+      );
+    }
 
   // Métodos manejados ahora en el padre
   onToggleFav(product: Product): void {
