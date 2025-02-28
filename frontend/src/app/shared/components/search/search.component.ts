@@ -33,11 +33,21 @@ export class SearchComponent {
 
   performSearch(): void {
     const query = this.searchQuery.trim();
-    this.router.navigate(['/dashboard/research'], {
+    this.router.navigate(['research'], { 
+      relativeTo: this.route, // Ruta relativa al contexto actual
       queryParams: { query: query || null },
       queryParamsHandling: 'merge'
     });
   }
-
+  
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.performSearch();
+    // Opcional: Forzar focus al input después de limpiar
+    setTimeout(() => {
+      const input = document.querySelector('input') as HTMLInputElement;
+      if(input) input.focus();
+    }, 0);
+  }
 
 }

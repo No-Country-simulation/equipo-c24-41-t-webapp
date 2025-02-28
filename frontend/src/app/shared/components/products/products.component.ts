@@ -23,6 +23,8 @@ export class ProductsComponent {
   @Input() selectedQuantity: number = 1;
   @Input() selectedProduct: Product | null = null;
   @Input() vendedorNames: { [key: number]: string } = {}; 
+  @Input() trackByProductId: (index: number, product: Product) => number = (index, product) => product.id;
+
   // Outputs
   @Output() toggleFav = new EventEmitter<Product>();
   @Output() showDetails = new EventEmitter<Product>();
@@ -33,9 +35,7 @@ export class ProductsComponent {
   @Output() closeDetails = new EventEmitter<void>();
 
   // Método trackBy para mejorar el rendimiento
-  trackByProductId(index: number, product: Product): number {
-    return product.id;
-  }
+
   isFavorite(product: Product): boolean {
     return this.favorites.some(fav => fav.id === product.id);
   }

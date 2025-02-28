@@ -25,16 +25,16 @@ export const routes: Routes = [
     // canActivate: [AuthGuard], // Protege la ruta
     children: [
       { path: 'perfil', component: PerfilComponent },
-      { path: 'research', component: ResearchComponent }
-    ]
+      { path: 'research', component: ResearchComponent },
+    ],
   },
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'home',
   },
-  { 
-    path: '**', 
-    component: NotFoundComponent 
+  {
+    path: '**',
+    component: NotFoundComponent,
   },
 ];

@@ -8,10 +8,11 @@ import { SearchComponent } from '../../shared/components/search/search.component
 import { AuthButtonComponent } from "../../shared/components/auth-button/auth-button.component";
 import { ProductsComponent } from "../../shared/components/products/products.component";
 import { RouterOutlet } from '@angular/router';
+import { RecommendedComponent } from "../../shared/components/recommended/recommended.component";
 
 @Component({
   selector: 'app-home',
-  imports: [FooterComponent, AutoAdBannerComponent, CategoryComponent, HeaderComponent, CommonModule, SearchComponent, AuthButtonComponent, RouterOutlet],
+  imports: [FooterComponent, AutoAdBannerComponent, CategoryComponent, HeaderComponent, CommonModule, SearchComponent, AuthButtonComponent, RouterOutlet, RecommendedComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

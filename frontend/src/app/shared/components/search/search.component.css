@@ -25,3 +25,16 @@
   .search{
     cursor: pointer
   }
+
+  .hover-opacity {
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  
+  .hover-opacity:hover {
+    opacity: 1;
+  }
+  
+  input.form-control-lg.pe-5 {
+    padding-right: 4.5rem !important;
+  }

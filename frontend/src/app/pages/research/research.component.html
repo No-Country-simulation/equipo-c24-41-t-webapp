@@ -1,8 +1,9 @@
 
 
 <div class="container mt-4">
-  <h3 *ngIf="searchQuery">Resultados para "{{ searchQuery }}"</h3>
-  <h3 *ngIf="!searchQuery">Todos nuestros productos</h3>
+  <!-- Título solo si hay query y resultados -->
+  <h3 *ngIf="searchQuery && filteredProducts.length > 0">Resultados para "{{ searchQuery }}"</h3>
+
   
   <div class="row mt-3">
     <app-products 
@@ -23,6 +24,8 @@
   ></app-products>
   </div>
 </div>
+
+
 
 <!-- Offcanvas de detalles (en el padre) -->
 <div #productDetailsCanvas class="offcanvas offcanvas-end" tabindex="-1">

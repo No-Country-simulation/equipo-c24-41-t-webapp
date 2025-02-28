@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 import { ProductService } from '../../shared/services/product.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Product } from '../../shared/models/product.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductsComponent } from '../../shared/components/products/products.component';
 import { AuthService } from '../../auth/auth.service';
@@ -52,7 +52,8 @@ export class ResearchComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private cartService: CartService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.products = this.productService.getAllProducts();
     this.filteredProducts = this.products;
@@ -81,12 +82,35 @@ export class ResearchComponent implements OnInit, OnDestroy {
 
   private executeSearch(query: string): void {
     if (query) {
-      this.productService.searchProducts(query).subscribe(results => {
-        this.filteredProducts = results;
+      this.productService.searchProducts(query).subscribe({
+        next: (results) => {
+          this.filteredProducts = results;
+          
+          // Redirigir si no hay resultados
+          if (results.length === 0) {
+            const parentRoute = this.getParentRoute();
+            this.router.navigate([parentRoute]);
+          }
+        },
+        error: (err) => console.error('Error en búsqueda:', err)
       });
     } else {
-      this.filteredProducts = this.productService.getAllProducts();
+      this.filteredProducts = [];
     }
+  }
+
+  private getParentRoute(): string {
+    const currentUrl = this.location.path();
+    
+    // Determinar la ruta padre basado en la URL actual
+    if (currentUrl.includes('/dashboard/research')) {
+      return '/dashboard';
+    } else if (currentUrl.includes('/home/research')) {
+      return '/home';
+    }
+    
+    // Ruta por defecto si no coincide
+    return '/';
   }
 
   ngOnDestroy() {
@@ -108,6 +132,7 @@ export class ResearchComponent implements OnInit, OnDestroy {
       );
     }
   }
+
 
   onToggleFav(product: Product): void {
     this.filterProducts(); // Call filterProducts to update filteredProducts
