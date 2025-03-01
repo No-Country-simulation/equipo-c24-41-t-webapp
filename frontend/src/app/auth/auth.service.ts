@@ -11,7 +11,7 @@ export class AuthService {
     {
       id: 1,
       email: 'admin@ejemplo.com',
-      password: '1234',
+      password: '12345678',
       name: 'Admin',
       role: 'vendedor',
       businessName: 'Negocio Admin',
@@ -19,7 +19,7 @@ export class AuthService {
     {
       id: 2,
       email: 'user@ejemplo.com',
-      password: 'abcd',
+      password: 'abcdefgh',
       name: 'Usuario',
       role: 'cliente',
     },
