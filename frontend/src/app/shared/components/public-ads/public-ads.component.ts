@@ -10,6 +10,9 @@ import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { AuthService } from '../../../auth/auth.service';
+import { GeoService } from '../../services/geo.service';
+import { Country, State } from '../../models/country.model';
+
 
 @Component({
   selector: 'app-public-ads',
@@ -23,22 +26,34 @@ export class PublicAdsComponent {
   selectedFile: File | null = null;
   useImageUrl = false;
   imagePreview: string | null = null;
+  countries: Country[] = [];
+  states: State[] = [];
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private geoService: GeoService
   ) {
+    this.countries = this.geoService.getCountries();
     this.productForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       precio: [0, [Validators.required, Validators.min(0)]],
       descripcion: ['', Validators.maxLength(200)],
-      imagen: ['', Validators.pattern(/^(http|https):\/\/[^ "]+$/)],
+      imagen: [''],
       categoria: ['', Validators.required],
       stock: [null, [Validators.min(0)]],
-      ubicacion: ['', Validators.maxLength(50)],
       especificaciones: [''],
+      country: ['', Validators.required],
+      state: ['', Validators.required],
+    });
+  }
+
+  ngOnInit() {
+    this.productForm.get('country')?.valueChanges.subscribe(countryName => {
+      this.states = this.geoService.getStatesByCountry(countryName);
+      this.productForm.get('state')?.reset();
     });
   }
 
@@ -82,6 +97,11 @@ export class PublicAdsComponent {
     if (this.productForm.valid) {
       this.authService.currentUser$.subscribe((currentUser) => {
         if (currentUser) {
+          const country = this.productForm.get('country')?.value;
+          const state = this.productForm.get('state')?.value;
+          const ubicacion = `${state}, ${country}`
+
+
           const newProduct: Product = {
             ...this.productForm.value,
             vendedorId: currentUser.id,
@@ -89,7 +109,7 @@ export class PublicAdsComponent {
             id: 0,
             categoria: this.productForm.value.categoria,
             stock: this.productForm.value.stock || 0,
-            ubicacion: this.productForm.value.ubicacion,
+            ubicacion,
             especificaciones: this.productForm.value.especificaciones,
           } as Product;
 
