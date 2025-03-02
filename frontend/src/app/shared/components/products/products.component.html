@@ -58,6 +58,7 @@
   </div>
 </div>
 
-<div *ngIf="products.length === 0" class="alert alert-warning">
-  No se encontraron productos
+<!-- Solo muestra mensaje si hay query y 0 resultados -->
+<div *ngIf="products.length === 0 && searchQuery" class="alert alert-warning">
+  No se encontraron productos para "{{ searchQuery }}"
 </div>

@@ -24,6 +24,7 @@ export class ProductsComponent {
   @Input() selectedProduct: Product | null = null;
   @Input() vendedorNames: { [key: number]: string } = {}; 
   @Input() trackByProductId: (index: number, product: Product) => number = (index, product) => product.id;
+  @Input() searchQuery: string = '';
 
   // Outputs
   @Output() toggleFav = new EventEmitter<Product>();

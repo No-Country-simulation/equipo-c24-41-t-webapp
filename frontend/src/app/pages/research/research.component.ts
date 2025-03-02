@@ -81,37 +81,21 @@ export class ResearchComponent implements OnInit, OnDestroy {
   }
 
   private executeSearch(query: string): void {
-    if (query) {
-      this.productService.searchProducts(query).subscribe({
-        next: (results) => {
-          this.filteredProducts = results;
-          
-          // Redirigir si no hay resultados
-          if (results.length === 0) {
-            const parentRoute = this.getParentRoute();
-            this.router.navigate([parentRoute]);
-          }
-        },
-        error: (err) => console.error('Error en búsqueda:', err)
-      });
-    } else {
-      this.filteredProducts = [];
+    if (!query) {
+      this.filteredProducts = []; // Vacía resultados
+      return;
     }
+  
+    this.productService.searchProducts(query).subscribe({
+      next: (results) => {
+        this.filteredProducts = results;
+        // Mantener el query en la UI aunque no haya resultados
+        this.searchQuery = query; 
+      },
+      error: (err) => console.error('Error en búsqueda:', err)
+    });
   }
 
-  private getParentRoute(): string {
-    const currentUrl = this.location.path();
-    
-    // Determinar la ruta padre basado en la URL actual
-    if (currentUrl.includes('/dashboard/research')) {
-      return '/dashboard';
-    } else if (currentUrl.includes('/home/research')) {
-      return '/home';
-    }
-    
-    // Ruta por defecto si no coincide
-    return '/';
-  }
 
   ngOnDestroy() {
     if (this.querySub) {

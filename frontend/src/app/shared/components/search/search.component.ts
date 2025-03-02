@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -33,21 +33,44 @@ export class SearchComponent {
 
   performSearch(): void {
     const query = this.searchQuery.trim();
-    this.router.navigate(['research'], { 
-      relativeTo: this.route, // Ruta relativa al contexto actual
-      queryParams: { query: query || null },
-      queryParamsHandling: 'merge'
-    });
+  
+    // Solo navegar si hay query válido
+    if (query) {
+      this.router.navigate(['research'], { 
+        relativeTo: this.route,
+        queryParams: { query },
+        queryParamsHandling: 'merge'
+      });
+    }
+    // Si está vacío pero el usuario hizo click en "X" (no en Enter)
+    else {
+      const parentRoute = this.getParentRoute();
+      this.router.navigate([parentRoute]); // Redirige solo si se activó clearSearch()
+    }
+  }
+
+  constructor(
+    private location: Location
+  ) {}
+
+  private getParentRoute(): string {
+    const currentUrl = this.location.path();
+    
+    // Determinar la ruta padre basado en la URL actual
+    if (currentUrl.includes('/dashboard/research')) {
+      return '/dashboard';
+    } else if (currentUrl.includes('/home/research')) {
+      return '/home';
+    }
+    
+    // Ruta por defecto si no coincide
+    return '/';
   }
   
   clearSearch(): void {
     this.searchQuery = '';
-    this.performSearch();
-    // Opcional: Forzar focus al input después de limpiar
-    setTimeout(() => {
-      const input = document.querySelector('input') as HTMLInputElement;
-      if(input) input.focus();
-    }, 0);
+    const parentRoute = this.getParentRoute();
+    this.router.navigate([parentRoute]); // Redirige solo aquí
   }
 
 }
