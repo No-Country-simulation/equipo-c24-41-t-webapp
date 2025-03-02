@@ -47,13 +47,12 @@ export class ResearchComponent implements OnInit, OnDestroy {
   vendedorNames: { [key: number]: string } = {};
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private favService: FavService,
     private productService: ProductService,
     private cartService: CartService,
     private route: ActivatedRoute,
-    private router: Router,
-    private location: Location
+
   ) {
     this.products = this.productService.getAllProducts();
     this.filteredProducts = this.products;
@@ -65,8 +64,10 @@ export class ResearchComponent implements OnInit, OnDestroy {
     this.products.forEach((product) => {
       if (product.vendedorId) {
         const vendedor = this.authService.getUserById(product.vendedorId);
-        this.vendedorNames[product.vendedorId] =
-          vendedor?.businessName || vendedor?.name || 'Anónimo';
+        this.vendedorNames[product.vendedorId] = 
+          vendedor?.businessName ||  // Primero intenta obtener el nombre del negocio
+          vendedor?.name ||          // Si no existe, usa el nombre personal
+          'Anónimo';                // Valor por defecto
       }
     });
   }
@@ -103,40 +104,29 @@ export class ResearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Método para filtrar productos
-  private filterProducts(): void {
-    if (!this.searchQuery) {
-      this.filteredProducts = [...this.products];
-    } else {
-      const query = this.searchQuery.toLowerCase();
-      this.filteredProducts = this.products.filter(
-        (product) =>
-          product.nombre.toLowerCase().includes(query) ||
-          product.descripcion?.toLowerCase().includes(query)
-      );
-    }
-  }
 
 
   onToggleFav(product: Product): void {
-    this.filterProducts(); // Call filterProducts to update filteredProducts
 
     this.favService.toggleFav(product);
   }
 
-  onShowQuantitySelector(event: {
-    productId: number;
-    event: MouseEvent;
-  }): void {
+  onShowQuantitySelector(event: { productId: number; event: MouseEvent }): void {
     event.event.stopPropagation();
     this.selectedProductId = event.productId;
     const currentProduct = this.products.find((p) => p.id === event.productId);
     this.maxStock = currentProduct?.stock || 1;
+    this.selectedQuantity = 1; // Resetear cantidad
   }
 
   onAdjustQuantity(amount: number): void {
     const newQuantity = this.selectedQuantity + amount;
     this.selectedQuantity = Math.max(1, Math.min(newQuantity, this.maxStock));
+  }
+
+  getBusinessName(vendedorId: number): string | null {
+    const vendedor = this.authService.getUserById(vendedorId);
+    return vendedor?.businessName || null;
   }
 
   onConfirmAddToCart(product: Product): void {
@@ -148,6 +138,7 @@ export class ResearchComponent implements OnInit, OnDestroy {
         }
       }
       this.selectedProductId = null;
+      this.selectedQuantity = 1; // Resetear cantidad
     }
   }
 

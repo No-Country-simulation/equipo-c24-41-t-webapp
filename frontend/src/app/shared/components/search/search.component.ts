@@ -54,19 +54,16 @@ export class SearchComponent {
   ) {}
 
   private getParentRoute(): string {
-    const currentUrl = this.location.path();
+    const currentRoute = this.router.url;
     
-    // Determinar la ruta padre basado en la URL actual
-    if (currentUrl.includes('/dashboard/research')) {
+    if (currentRoute.startsWith('/dashboard')) {
       return '/dashboard';
-    } else if (currentUrl.includes('/home/research')) {
+    } else if (currentRoute.startsWith('/home')) {
       return '/home';
     }
     
-    // Ruta por defecto si no coincide
     return '/';
   }
-  
   clearSearch(): void {
     this.searchQuery = '';
     const parentRoute = this.getParentRoute();

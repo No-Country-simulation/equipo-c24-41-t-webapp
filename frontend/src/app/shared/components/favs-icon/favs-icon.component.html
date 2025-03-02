@@ -27,9 +27,10 @@
                   <button class="btn btn-link text-danger p-0" (click)="favsService.toggleFav(fav)">
                     <i class="bi bi-heart-fill fs-4"></i>
                   </button>
-                  
                 </div>
                 <p class="card-text text-muted small mb-1">{{ fav.descripcion || 'Sin descripción' }}</p>
+                <!-- Agregar precio aquí -->
+                <p class="card-text fw-semibold text-success mb-1">${{ fav.precio | number }}</p>
               </div>
             </div>
           </div>

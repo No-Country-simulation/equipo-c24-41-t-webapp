@@ -14,7 +14,6 @@
         </p>
         <p class="card-text text-muted small mb-1">
           <i class="bi bi-shop me-1"></i>
-          <!-- Usar el Input vendedorNames -->
           {{ vendedorNames[product.vendedorId || 0] || 'Anónimo' }}
         </p>
         <p class="card-text fw-semibold text-success mb-1">${{ product.precio }}</p>
@@ -45,13 +44,12 @@
             <i class="bi bi-cart-plus"></i> Añadir
           </button>
           <!-- Botón de favoritos -->
-          <button *ngIf="isAuthenticated" (click)="toggleFav.emit(product); $event.stopPropagation()"
-            [ngClass]="{'btn-danger': isFavorite(product), 'btn-outline-secondary': !isFavorite(product)}"
-            class="btn btn-sm p-1">
-            <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i> {{
-            isFavorite(product) ? 'Quitar' : 'Favorito' }}
-
-          </button>
+          <button *ngIf="isAuthenticated" 
+          (click)="toggleFav.emit(product); $event.stopPropagation()" 
+          [ngClass]="{'btn-danger': isFavorite(product), 'btn-outline-secondary': !isFavorite(product)}" 
+          class="btn btn-sm p-1">
+          <i [ngClass]="{'bi-heart-fill': isFavorite(product), 'bi-heart': !isFavorite(product)}"></i>
+        </button>
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@
 
 
 
-<!-- Offcanvas de detalles (en el padre) -->
+<!-- Offcanvas de detalles  -->
 <div #productDetailsCanvas class="offcanvas offcanvas-end" tabindex="-1">
   <div class="offcanvas-header bg-light">
     <h3 class="offcanvas-title fw-bold">{{ selectedProduct?.nombre }}</h3>
@@ -50,18 +50,38 @@
           <p class="text-muted">{{ selectedProduct.descripcion }}</p>
         </div>
 
-        <!-- Vendedor -->
-        <div class="col-md-6">
-          <div class="card border-0 shadow-sm">
-            <div class="card-body">
-              <h6 class="fw-bold mb-3">
-                <i class="bi bi-shop me-2"></i>Vendedor
-              </h6>
-              <p class="mb-0">{{ vendedorNames[selectedProduct.vendedorId || 0] || 'Anónimo' }}</p>
-            </div>
-          </div>
-        </div>
+<!-- Vendedor -->
+<div class="col-md-6">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <h6 class="fw-bold mb-3">
+        <i class="bi bi-shop me-2"></i>
+        {{ vendedorNames[selectedProduct.vendedorId || 0] || 'Anónimo' }}
+      </h6>
+      
+      <!-- Estado de verificación -->
+      <div *ngIf="selectedProduct.vendedorId; else sinVerificar">
+        <small *ngIf="authService.getUserById(selectedProduct.vendedorId)?.businessName" 
+               class="text-success">
+          <i class="bi bi-patch-check"></i> 
+          Confiable
+        </small>
+        <small *ngIf="!authService.getUserById(selectedProduct.vendedorId)?.businessName" 
+               class="text-warning">
+          <i class="bi bi-exclamation-triangle"></i> 
+          Poco Confiable
+        </small>
       </div>
+
+      <ng-template #sinVerificar>
+        <small class="text-danger">
+          <i class="bi bi-x-circle"></i> 
+          No verificado
+        </small>
+      </ng-template>
+    </div>
+  </div>
+</div>
 
       <!-- Información Adicional -->
       <div class="border-top pt-3">
