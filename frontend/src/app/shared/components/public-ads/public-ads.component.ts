@@ -39,16 +39,27 @@ export class PublicAdsComponent {
     this.countries = this.geoService.getCountries();
     this.productForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
-      precio: [0, [Validators.required, Validators.min(0)]],
+      precio: [1, [Validators.required, Validators.min(1)]],
       descripcion: ['', Validators.maxLength(200)],
       imagen: [''],
       categoria: ['', Validators.required],
-      stock: [null, [Validators.min(0)]],
-      especificaciones: [''],
+      stock: [null, [Validators.min(0)]],      especificaciones: [''],
       country: ['', Validators.required],
       state: ['', Validators.required],
     });
   }
+
+  preventNegative(event: KeyboardEvent): boolean {
+    const allowedChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const isNegative = event.key === '-';
+    
+    // Bloquear el signo negativo y cualquier carácter no numérico
+    if (isNegative || !allowedChars.includes(event.key)) {
+        event.preventDefault();
+        return false;
+    }
+    return true;
+}
 
   ngOnInit() {
     this.productForm.get('country')?.valueChanges.subscribe(countryName => {
