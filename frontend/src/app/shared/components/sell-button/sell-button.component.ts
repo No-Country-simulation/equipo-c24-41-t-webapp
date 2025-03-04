@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
-import { User } from '../../models/user.model';
-import { take } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-sell-button',
@@ -22,19 +21,10 @@ export class SellButtonComponent implements OnInit {
   }
 
   toggleRoute(role: string): void {
-    this.authService.getCurrentUser().pipe(take(1)).subscribe(user => {
-      if (user) {
-        const updatedUser: User = { ...user, role };
-
-        // Actualiza localStorage con el nuevo rol
-        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-
-        // Actualiza el BehaviorSubject en AuthService para notificar a otros componentes
-        this.authService.updateCurrentUser(updatedUser);
-
-        // Redirige al dashboard con el nuevo rol
+    this.authService.updateUserRole(role)
+      .subscribe(() => {
         this.router.navigate(['/dashboard']);
-      }
-    });
+      });
   }
+  
 }

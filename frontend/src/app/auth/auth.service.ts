@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { User } from '../shared/models/user.model';
+import { take, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -105,5 +106,21 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('currentUser');
   }
+
+    // Método centralizado para actualizar el rol del usuario
+    updateUserRole(role: string): Observable<User | null> {
+      return this.getCurrentUser().pipe(
+        take(1),
+        tap(user => {
+          if (user) {
+            const updatedUser: User = { ...user, role };
+            // Actualiza localStorage
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+            // Notifica a otros componentes actualizando el BehaviorSubject
+            this.updateCurrentUser(updatedUser);
+          }
+        })
+      );
+    }
   
 }
