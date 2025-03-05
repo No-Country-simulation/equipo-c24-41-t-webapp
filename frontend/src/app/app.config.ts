@@ -1,9 +1,10 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { AuthGuard } from './auth/auth.guard';
+import { FormsModule } from '@angular/forms';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor])
   ),
   AuthGuard,
-
+  importProvidersFrom(FormsModule)
 
   ]
 };

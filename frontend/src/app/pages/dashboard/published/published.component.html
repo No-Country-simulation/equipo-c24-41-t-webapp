@@ -1,0 +1,92 @@
+<!-- published.component.html -->
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 mb-0">Tus productos</h1>
+        <a class="btn btn-primary" 
+        routerLink="/dashboard/vendor">
+        <i class="bi bi-plus-circle me-2"></i>Nuevo producto
+     </a>
+    </div>
+
+    <p class="text-muted mb-4">
+        Aquí podrás subir productos, gestionar los que ya tienes y destacarlos para venderlos antes.
+    </p>
+
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <button class="nav-link hover-primary" 
+               [class.active]="activeTab === 'venta'"
+               (click)="activeTab = 'venta'">
+               <i class="bi bi-tag me-2"></i>En venta
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link hover-primary" 
+               [class.active]="activeTab === 'vendidos'"
+               (click)="activeTab = 'vendidos'">
+               <i class="bi bi-currency-dollar me-2"></i>Vendidos
+            </button>
+        </li>
+    </ul>
+
+    <!-- Contenido pestañas -->
+    <div *ngIf="activeTab === 'venta'">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" *ngFor="let producto of productosEnVenta">
+                <div class="card h-100 shadow-sm">
+                    <img [src]="producto.imagen" class="card-img-top" alt="{{producto.nombre}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{producto.nombre}}</h5>
+                        <p class="card-text text-success">${{producto.precio | number}}</p>
+                        <div class="d-flex justify-content-between">
+                            <span class="badge bg-info">
+                                <i class="bi bi-eye me-2"></i>{{producto.vistas}}
+                            </span>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Editar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col" *ngIf="productosEnVenta.length === 0">
+                <div class="alert alert-info">
+                    No tienes productos en venta actualmente
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="activeTab === 'vendidos'">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" *ngFor="let producto of productosVendidos">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        Vendido el {{producto.fechaVenta | date}}
+                    </div>
+                    <img [src]="producto.imagen" class="card-img-top" alt="{{producto.nombre}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{producto.nombre}}</h5>
+                        <p class="card-text text-success">${{producto.precio | number}}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle me-2"></i>Vendido
+                            </span>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                Detalles
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col" *ngIf="productosVendidos.length === 0">
+                <div class="alert alert-info">
+                    No hay productos vendidos
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,67 +1,77 @@
-<main class="container my-4">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow">
-        <div class="card-body">
-          <div class="d-flex justify-content-end align-items-center mb-3">
-            <button *ngIf="!editMode" class="btn btn-primary" (click)="toggleEdit()">
-              <i class="bi bi-pencil"></i> Editar
-            </button>
-          </div>
-
-          <form *ngIf="editMode; else viewModeTemplate" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-            <!-- Campos comunes -->
-            <div class="mb-3">
-              <label>Nombre</label>
-              <input formControlName="name" class="form-control">
-              <div *ngIf="profileForm.get('name')?.invalid" class="text-danger">
-                Nombre es requerido
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label>Email</label>
-              <input formControlName="email" type="email" class="form-control">
-              <div *ngIf="profileForm.get('email')?.invalid" class="text-danger">
-                Email inválido
-              </div>
-            </div>
-
-            <!-- Campo de negocio, nunca obligatorio -->
-            <div class="mb-3">
-              <label>Nombre del Negocio</label>
-              <input formControlName="businessName" class="form-control">
-            </div>
-
-            <div class="d-flex gap-2 justify-content-end">
-              <button type="button" class="btn btn-secondary" (click)="toggleEdit()">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-success" [disabled]="profileForm.invalid">
-                Guardar
-              </button>
-            </div>
-          </form>
-
-          <ng-template #viewModeTemplate>
-            <div>
-              <h3 class="text-primary">Mi Perfil</h3>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <strong>Nombre:</strong> {{ currentUser?.name }}
-                </li>
-                <li class="list-group-item">
-                  <strong>Email:</strong> {{ currentUser?.email }}
-                </li>
-                <li class="list-group-item" *ngIf="currentUser?.businessName">
-                  <strong>Negocio:</strong> {{ currentUser?.businessName }}
-                </li>
-              </ul>
-            </div>
-          </ng-template>
-
-        </div>
+<!-- Modo vista: Una sola tarjeta con cover, imagen de perfil y detalles -->
+<div *ngIf="!editMode()">
+  <div class="profile-card">
+    <div class="profile-banner">
+      <img [src]="usuario().coverPhoto || 'https://picsum.photos/id/1018/600/150'" alt="Cover Photo">
+      <div class="profile-picture">
+        <img [src]="usuario().profilePhoto || 'https://picsum.photos/id/1027/80/80'" alt="Profile Photo">
       </div>
     </div>
+    <div class="profile-info">
+      <h2>{{ usuario().username }}</h2>
+      <p>{{ usuario().bio }}</p>
+    </div>
+    <div class="profile-details">
+      <p><strong>Email:</strong> {{ usuario().email }}</p>
+      <p *ngIf="usuario().birthDate"><strong>Fecha de nacimiento:</strong> {{ usuario().birthDate }}</p>
+      <p *ngIf="usuario().gender"><strong>Género:</strong> {{ usuario().gender }}</p>
+      <p><strong>Ubicación:</strong> {{ usuario().location }}</p>
+      <p *ngIf="usuario().businessName"><strong>Empresa:</strong> {{ usuario().businessName }}</p>
+    </div>
+    <button (click)="toggleEditMode()" class="edit-btn">Editar Perfil</button>
   </div>
-</main>
+</div>
+
+<!-- Modo edición: Una tarjeta para editar imágenes y demás datos -->
+<div *ngIf="editMode()">
+  <div class="edit-card">
+    <div class="edit-banner">
+      <label>
+        Portada:
+        <img [src]="editUser.coverPhoto || usuario().coverPhoto || 'https://picsum.photos/id/1018/600/150'" alt="Cover Photo" class="cover-photo">
+        <input type="file" (change)="onFileSelected($event, 'coverPhoto')">
+      </label>
+    </div>
+    <div class="edit-picture">
+      <label>
+        Imagen de perfil:
+        <img [src]="editUser.profilePhoto || usuario().profilePhoto || 'https://picsum.photos/id/1027/80/80'" alt="Profile Photo" class="profile-photo">
+        <input type="file" (change)="onFileSelected($event, 'profilePhoto')">
+      </label>
+    </div>
+    <form (ngSubmit)="saveUserData()">
+      <label>
+        Nombre:
+        <input type="text" [(ngModel)]="editUser.username" name="username">
+      </label>
+      <label>
+        Email:
+        <input type="email" [(ngModel)]="editUser.email" name="email">
+      </label>
+      <label>
+        Fecha de Nacimiento:
+        <input type="date" [(ngModel)]="editUser.birthDate" name="birthDate">
+      </label>
+      <label>
+        Género:
+        <input type="text" [(ngModel)]="editUser.gender" name="gender">
+      </label>
+      <label>
+        Ubicación:
+        <input type="text" [(ngModel)]="editUser.location" name="location">
+      </label>
+      <label>
+        Bio:
+        <textarea [(ngModel)]="editUser.bio" name="bio"></textarea>
+      </label>
+      <label>
+        Empresa:
+        <input type="text" [(ngModel)]="editUser.businessName" name="businessName">
+      </label>
+      <div class="form-actions">
+        <button type="submit">Guardar</button>
+        <button type="button" (click)="cancelEditMode()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -23,7 +23,7 @@ export class SellButtonComponent implements OnInit {
   toggleRoute(role: string): void {
     this.authService.updateUserRole(role)
       .subscribe(() => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard/vendor']);
       });
   }
   

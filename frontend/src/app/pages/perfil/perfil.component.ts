@@ -1,81 +1,75 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import {  RouterModule} from '@angular/router';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
-} from '@angular/forms';
+  FormsModule} from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
+
+declare const bootstrap: any;
 
 
 @Component({
   selector: 'app-perfil',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormsModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
-export class PerfilComponent implements OnInit {
-  editMode = false;
-  profileForm!: FormGroup;
-  rol: string = ''; // Se asignará según el rol del usuario
-  currentUser: any = null; // Aquí almacenaremos los datos del usuario
+export class PerfilComponent {
+  usuario = signal({
+    username: 'Juan Perez',
+    email: 'juan@example.com',
+    birthDate: '1990-01-01',
+    gender: 'Male',
+    location: 'Argentina',
+    bio: 'Apasionado por la Ceramica artesanal',
+    businessName: '',
+    profilePhoto: '',
+    coverPhoto: ''
+  });
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService
-  ) {}
+  editMode = signal(false);
 
-  ngOnInit(): void {
-    // Obtener el usuario desde el AuthService
-    this.authService.currentUser$.subscribe((user) => {
-      this.currentUser = user;
-      if (user) {
-        this.rol = user.role || ''; // Asigna el rol del usuario
-        this.initForm();
-      }
-    });
+  editUser: any = {};
+
+  ngOnInit(): void {}
+
+
+
+  toggleEditMode(): void {
+    if (!this.editMode()) {
+      // Al ingresar a edición, copiamos los datos actuales
+      this.editUser = { ...this.usuario() };
+    }
+    this.editMode.set(!this.editMode());
   }
 
-  private initForm(): void {
-    this.profileForm = this.fb.group({
-      name: [this.currentUser?.name || ''],
-      email: [this.currentUser?.email || ''],
-      businessName: [this.currentUser?.businessName || ''],
-    });
+  saveUserData(): void {
+    this.usuario.set({ ...this.editUser });
+    this.editMode.set(false);
   }
 
-  toggleEdit(): void {
-    this.editMode = !this.editMode;
-    if (!this.editMode) {
-      this.initForm(); // Reinitialize the form when toggling off edit mode
+  cancelEditMode(): void {
+    this.editMode.set(false);
+  }
+
+  onFileSelected(event: any, field: string): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        // Actualiza la imagen en el objeto de edición
+        this.editUser = {
+          ...this.editUser,
+          [field]: reader.result as string
+        };
+      };
+      reader.readAsDataURL(file);
     }
   }
-
-  onSubmit(): void {
-    if (this.profileForm.invalid) return;
-
-    const updatedData = { ...this.currentUser, ...this.profileForm.value };
-
-    // Si el campo 'businessName' está vacío y el rol es 'vendedor', cambiamos el rol a 'cliente'
-    if (!this.profileForm.value.businessName && this.rol === 'vendedor') {
-      updatedData.role = 'cliente';
-    }
-
-    // Si el campo 'businessName' tiene un valor y el rol es 'cliente', cambiamos el rol a 'vendedor'
-    if (this.profileForm.value.businessName && this.rol === 'cliente') {
-      updatedData.role = 'vendedor';
-    }
-
-    // Actualizamos los datos del usuario
-    this.authService.updateUserProfile(updatedData).subscribe({
-      next: () => {
-        this.currentUser = updatedData;
-        this.rol = updatedData.role; // Actualizamos el rol
-        this.editMode = false;
-      },
-      error: (err) => console.error('Error al actualizar:', err)
-    });
-  }
+  
+  
 }
