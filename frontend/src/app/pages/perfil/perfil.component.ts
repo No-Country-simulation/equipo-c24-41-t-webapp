@@ -23,13 +23,20 @@ export class PerfilComponent {
     username: 'Juan Perez',
     email: 'juan@example.com',
     birthDate: '1990-01-01',
-    gender: 'Male',
+    gender: 'Hombre',
     location: 'Argentina',
     bio: 'Apasionado por la Ceramica artesanal',
     businessName: '',
     profilePhoto: '',
     coverPhoto: ''
   });
+
+  triggerFileInput(type: string) {
+    const inputElement = document.querySelector(`input[type="file"][name="${type}"]`) as HTMLInputElement;
+    if (inputElement) {
+      inputElement.click();
+    }
+  }
 
   editMode = signal(false);
 

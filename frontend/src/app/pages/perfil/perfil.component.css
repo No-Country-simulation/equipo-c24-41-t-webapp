@@ -1,4 +1,4 @@
-/* Tarjeta en modo vista */
+/* Tarjeta en modo vista 
 .profile-card {
     max-width: 600px;
     margin: 40px auto;
@@ -7,14 +7,7 @@
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
-  .profile-banner {
-    position: relative;
-  }
-  .profile-banner img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-  }
+
   .profile-picture {
     position: absolute;
     bottom: -40px;
@@ -53,7 +46,7 @@
     background: #0056b3;
   }
   
-  /* Tarjeta en modo edición */
+  Tarjeta en modo edición
   .edit-card {
     max-width: 600px;
     margin: 40px auto;
@@ -114,3 +107,19 @@
     color: #fff;
   }
   
+   .profile-banner {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .profile-banner .banner-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-picture {
+    transform: translateY(-50%);
+  } */

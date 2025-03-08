@@ -12,9 +12,7 @@ import { PublishedComponent } from './pages/dashboard/published/published.compon
 import { MailboxComponent } from './pages/dashboard/mailbox/mailbox.component';
 import { FavoritesComponent } from './pages/dashboard/favorites/favorites.component';
 
-
 export const routes: Routes = [
-
   {
     path: 'auth',
     component: LoginRegisterComponent,
@@ -32,11 +30,11 @@ export const routes: Routes = [
     children: [
       { path: 'perfil', component: PerfilComponent },
       { path: 'research', component: ResearchComponent },
-      { path: 'vendor', component: PublicAdsComponent},
-      { path: 'buy', component: BuyComponent},
-      { path: 'published', component: PublishedComponent},
-      { path: 'mailbox', component: MailboxComponent},
-      { path: 'favorites', component: FavoritesComponent},
+      { path: 'vendor', component: PublicAdsComponent },
+      { path: 'buy', component: BuyComponent },
+      { path: 'published', component: PublishedComponent },
+      { path: 'mailbox', component: MailboxComponent },
+      { path: 'favorites', component: FavoritesComponent },
     ],
   },
   {
