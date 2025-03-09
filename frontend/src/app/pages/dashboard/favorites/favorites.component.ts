@@ -10,43 +10,10 @@ import { Component } from '@angular/core';
 export class FavoritesComponent {
   activeTab: 'products' | 'profiles' | 'searches' = 'products';
 
-  // Datos de ejemplo
-  favoriteProducts = [
-    {
-      name: 'Cámara DSLR Profesional',
-      price: 899.99,
-      image: 'https://picsum.photos/300/200'
-    },
-    {
-      name: 'Zapatillas Running Ultra',
-      price: 129.99,
-      image: 'https://picsum.photos/300/200'
-    }
-  ];
+  favoriteProducts: any[] = []; 
+  favoriteProfiles: any[] = []; 
 
-  favoriteProfiles = [
-    {
-      name: 'Juan Pérez',
-      followers: 2450,
-      avatar: 'https://picsum.photos/300/200'
-    },
-    {
-      name: 'TechShop Oficial',
-      followers: 18900,
-      avatar: 'https://picsum.photos/300/200'
-    }
-  ];
 
-  favoriteSearches = [
-    {
-      term: 'cámaras vintage',
-      date: 'Buscado hace 2 días'
-    },
-    {
-      term: 'mochilas impermeables',
-      date: 'Buscado ayer'
-    }
-  ];
 
   setActiveTab(tab: 'products' | 'profiles' | 'searches') {
     this.activeTab = tab;

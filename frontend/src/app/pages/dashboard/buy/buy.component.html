@@ -42,18 +42,16 @@
       </div>
   </div>
 
-  <div *ngIf="activeTab === 'finalizadas'">
-      <div class="row row-cols-1 row-cols-md-2 g-4">
-          <!-- Tarjetas de compras finalizadas -->
-          <div class="col" *ngFor="let compra of comprasFinalizadas">
-              <div class="card h-100 shadow-sm">
-                  <div class="card-body">
-                      <h5 class="card-title">Compra #{{compra.id}}</h5>
-                      <p class="card-text">Estado: {{compra.estado}}</p>
-                      <p class="card-text">Fecha: {{compra.fecha | date}}</p>
-                  </div>
-              </div>
-          </div>
-      </div>
+<!-- Contenido de pestañas Finalizadas -->
+<div *ngIf="activeTab === 'finalizadas'">
+    <!-- Agrega este bloque de mensaje -->
+    <div class="alert alert-info" *ngIf="comprasFinalizadas.length === 0">
+      No tienes compras finalizadas todavía
+    </div>
+  
+    <!-- Modifica el contenedor existente para mostrar solo con elementos -->
+    <div class="row row-cols-1 row-cols-md-2 g-4" *ngIf="comprasFinalizadas.length > 0">
+      <!-- ... contenido existente ... -->
+    </div>
   </div>
 </div>

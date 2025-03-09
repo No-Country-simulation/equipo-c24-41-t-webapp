@@ -12,8 +12,5 @@ export class BuyComponent {
   
   // Datos de ejemplo
   comprasEnCurso: any[] = []; // Vacío para mostrar mensaje
-  comprasFinalizadas = [
-    { id: 1, estado: 'Entregado', fecha: '2024-03-01' },
-    { id: 2, estado: 'Completado', fecha: '2024-02-15' }
-  ];
+  comprasFinalizadas: any[] = [];
 }

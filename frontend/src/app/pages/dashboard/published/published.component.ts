@@ -11,24 +11,8 @@ import { RouterLink } from '@angular/router';
 export class PublishedComponent {
   activeTab: 'venta' | 'vendidos' = 'venta';
   
-  // Datos de ejemplo
-  productosEnVenta = [
-    {
-      id: 1,
-      nombre: 'Jarrón de Cerámica',
-      precio: 45,
-      imagen: 'https://picsum.photos/300/200',
-      vistas: 150
-    }
-  ];
 
-  productosVendidos = [
-    {
-      id: 2,
-      nombre: 'Lámpara Vintage',
-      precio: 80,
-      imagen: 'https://picsum.photos/300/201',
-      fechaVenta: '2024-02-15'
-    }
-  ];
+
+  productosEnVenta: any[] = []; 
+  productosVendidos: any[] = [];
 }
